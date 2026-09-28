@@ -2,10 +2,11 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "primary-navigation",
+      "name": "phyx",
       "runtimeExecutable": "node",
-      "runtimeArgs": ["/Users/maddie.clark/Desktop/PHYX/primary-navigation/server.js"],
-      "port": 4173
+      "runtimeArgs": ["/Users/maddie.clark/Desktop/PHYX/server.js"],
+      "port": 4173,
+      "autoPort": true
     }
   ]
 }

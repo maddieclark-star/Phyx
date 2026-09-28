@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 const root = __dirname;
-const port = 4173;
+const port = process.env.PORT || 4173;
 
 const mime = {
   '.html': 'text/html',

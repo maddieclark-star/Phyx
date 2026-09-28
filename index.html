@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PHYX</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;500&family=DM+Sans:ital,wght@0,300;0,500;1,300&family=Fraunces:opsz,wght@9..144,500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <section class="hero">
+    <nav class="nav" aria-label="Primary">
+      <div class="nav__container">
+        <div class="nav__menu-group">
+          <img class="nav__logo" src="site-assets/phyx-logo.svg" alt="PHYX" />
+
+          <ul class="nav__links">
+            <li><a class="nav__link" href="#">How it works</a></li>
+            <li><a class="nav__link" href="#">Explore</a></li>
+            <li><a class="nav__link" href="#">Labs</a></li>
+            <li><a class="nav__link" href="#">Academy</a></li>
+            <li><a class="nav__link" href="#">About</a></li>
+          </ul>
+        </div>
+
+        <div class="nav__utilities">
+          <div class="nav__ctas">
+            <button class="nav__button nav__button--primary" type="button">
+              <span class="btn-label"><span class="btn-label__track"><span>Patient login</span><span aria-hidden="true">Patient login</span></span></span>
+            </button>
+            <button class="nav__button nav__button--secondary" type="button">
+              <span class="btn-label"><span class="btn-label__track"><span>Start assessment</span><span aria-hidden="true">Start assessment</span></span></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="hero__header">
+      <div class="hero__glow hero__glow--a" aria-hidden="true"></div>
+      <div class="hero__glow hero__glow--b" aria-hidden="true"></div>
+
+      <div class="hero__row">
+        <div class="hero__content">
+          <div class="hero__heading-group">
+            <div class="hero__eyebrow">
+              <img class="hero__eyebrow-dot" src="site-assets/dot.svg" alt="" />
+              <span>Doctor-led health, personalised</span>
+            </div>
+
+            <h1 class="hero__heading">
+              <span>The strongest</span>
+              <span>version of you.</span>
+            </h1>
+          </div>
+
+          <p class="hero__subtext">
+            Diagnostic testing, personalised care pathways and ongoing clinical support, tailored to you.
+          </p>
+        </div>
+
+        <div class="hero__ctas">
+          <button class="hero__button hero__button--primary" type="button">
+            <span class="btn-label"><span class="btn-label__track"><span>Start your free assessment</span><span aria-hidden="true">Start your free assessment</span></span></span>
+          </button>
+          <button class="hero__button hero__button--secondary" type="button">
+            <span class="btn-label"><span class="btn-label__track"><span>Talk to a phyx nurse</span><span aria-hidden="true">Talk to a phyx nurse</span></span></span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero__media">
+      <img class="hero__photo" src="site-assets/hero-photo.png" alt="Woman looking upward, calm and confident" />
+
+      <div class="hero__sky hero__sky--wide" aria-hidden="true">
+        <img src="site-assets/overlay-wide.png" alt="" />
+      </div>
+
+      <img class="hero__arc" src="site-assets/arc-line.svg" alt="" />
+
+      <div class="hero__sky hero__sky--strip" aria-hidden="true">
+        <img src="site-assets/overlay-strip.png" alt="" />
+      </div>
+
+      <div class="hero__badge hero__badge--doctors">
+        <div class="hero__avatars">
+          <img src="site-assets/avatar-1.png" alt="" />
+          <img src="site-assets/avatar-2.png" alt="" />
+          <img src="site-assets/avatar-3.png" alt="" />
+        </div>
+        <span>AHPRA-registered doctors</span>
+      </div>
+
+      <div class="hero__badge hero__badge--care">
+        <span class="hero__badge-icon hero__badge-icon--tertiary">
+          <img src="site-assets/icon-check.svg" alt="" />
+        </span>
+        <span>Personalised care plan</span>
+      </div>
+
+      <div class="hero__badge hero__badge--review">
+        <svg class="hero__badge-status" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle class="hero__badge-status-ring" cx="10" cy="10" r="10" fill="#04B825" fill-opacity="0.2" />
+          <circle cx="10" cy="10" r="4" fill="#04B825" />
+        </svg>
+        <span>Free 15-min clinical review</span>
+      </div>
+
+      <div class="hero__badge hero__badge--pharmacy">
+        <span class="hero__badge-icon hero__badge-icon--dark">
+          <img src="site-assets/icon-compound.svg" alt="" />
+        </span>
+        <span>Australian compounding pharmacy</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="services">
+    <div class="services__header">
+      <div class="services__heading-group">
+        <div class="services__eyebrow">
+          <img class="services__eyebrow-dot" src="site-assets/dot-eyebrow.svg" alt="" />
+          <span>Explore</span>
+        </div>
+        <h2 class="services__heading">Where would you like to start?</h2>
+      </div>
+      <p class="services__subtext">
+        Choose the area that matters most. Every consult is tailored to what you want to work on.
+      </p>
+    </div>
+
+    <div class="services__grid">
+        <article class="service-card">
+          <img class="service-card__image" src="site-assets/card-metabolism.jpg" alt="Woman stretching outdoors" />
+          <div class="service-card__blur" aria-hidden="true">
+            <span class="service-card__blur-layer service-card__blur-layer--1"></span>
+            <span class="service-card__blur-layer service-card__blur-layer--2"></span>
+            <span class="service-card__blur-layer service-card__blur-layer--3"></span>
+            <span class="service-card__blur-layer service-card__blur-layer--4"></span>
+            <span class="service-card__blur-layer service-card__blur-layer--5"></span>
+          </div>
+          <div class="service-card__vignette-top" aria-hidden="true"></div>
+          <div class="service-card__scrim" aria-hidden="true"></div>
+          <div class="service-card__icon">
+            <img class="service-card__icon-glyph" src="site-assets/icon-arrow-hover.svg" alt="" />
+          </div>
+          <div class="service-card__text">
+            <h3 class="service-card__heading">Metabolism</h3>
+            <p class="service-card__meta">
+              <img class="service-card__meta-dot" src="site-assets/dot-bullet.svg" alt="" />
+              <span>Energy, appetite, body composition</span>
+            </p>
+          </div>
+        </article>
+
+        <article class="service-card">
+          <img class="service-card__image" src="site-assets/card-longevity.jpg" alt="Macro shot of green plant cells" />
+          <div class="service-card__blur" aria-hidden="true">
+            <span class="service-card__blur-layer service-card__blur-layer--1"></span>
+            <span class="service-card__blur-layer service-card__blur-layer--2"></span>
+            <span class="service-card__blur-layer service-card__blur-layer--3"></span>
+            <span class="service-card__blur-layer service-card__blur-layer--4"></span>
+            <span class="service-card__blur-layer service-card__blur-layer--5"></span>
+          </div>
+          <div class="service-card__vignette-top" aria-hidden="true"></div>
+          <div class="service-card__scrim" aria-hidden="true"></div>
+          <div class="service-card__icon">
+            <img class="service-card__icon-glyph" src="site-assets/icon-arrow-hover.svg" alt="" />
+          </div>
+          <div class="service-card__text">
+            <h3 class="service-card__heading">Longevity</h3>
+            <p class="service-card__meta">
+              <img class="service-card__meta-dot" src="site-assets/dot-bullet.svg" alt="" />
+              <span>Healthspan, ageing markers, resilience</span>
+            </p>
+          </div>
+        </article>
+
+        <article class="service-card">
+          <img class="service-card__image" src="site-assets/card-performance.jpg" alt="Cyclist in motion wearing a helmet" />
+          <div class="service-card__blur" aria-hidden="true">
+            <span class="service-card__blur-layer service-card__blur-layer--1"></span>
+            <span class="service-card__blur-layer service-card__blur-layer--2"></span>
+            <span class="service-card__blur-layer service-card__blur-layer--3"></span>
+            <span class="service-card__blur-layer service-card__blur-layer--4"></span>
+            <span class="service-card__blur-layer service-card__blur-layer--5"></span>
+          </div>
+          <div class="service-card__vignette-top" aria-hidden="true"></div>
+          <div class="service-card__scrim" aria-hidden="true"></div>
+          <div class="service-card__icon">
+            <img class="service-card__icon-glyph" src="site-assets/icon-arrow-hover.svg" alt="" />
+          </div>
+          <div class="service-card__text">
+            <h3 class="service-card__heading">Performance</h3>
+            <p class="service-card__meta">
+              <img class="service-card__meta-dot" src="site-assets/dot-bullet.svg" alt="" />
+              <span>Strength, endurance, recovery capacity</span>
+            </p>
+          </div>
+        </article>
+
+        <article class="service-card">
+          <img class="service-card__image" src="site-assets/card-recovery.jpg" alt="Close-up of clear droplets" />
+          <div class="service-card__blur" aria-hidden="true">
+            <span class="service-card__blur-layer service-card__blur-layer--1"></span>
+            <span class="service-card__blur-layer service-card__blur-layer--2"></span>
+            <span class="service-card__blur-layer service-card__blur-layer--3"></span>
+            <span class="service-card__blur-layer service-card__blur-layer--4"></span>
+            <span class="service-card__blur-layer service-card__blur-layer--5"></span>
+          </div>
+          <div class="service-card__vignette-top" aria-hidden="true"></div>
+          <div class="service-card__scrim" aria-hidden="true"></div>
+          <div class="service-card__icon">
+            <img class="service-card__icon-glyph" src="site-assets/icon-arrow-hover.svg" alt="" />
+          </div>
+          <div class="service-card__text">
+            <h3 class="service-card__heading">Recovery</h3>
+            <p class="service-card__meta">
+              <img class="service-card__meta-dot" src="site-assets/dot-bullet.svg" alt="" />
+              <span>Sleep, inflammation, muscle repair</span>
+            </p>
+          </div>
+        </article>
+
+        <article class="service-card">
+          <img class="service-card__image" src="site-assets/card-mood-sleep.jpg" alt="Smiling man in a white t-shirt" />
+          <div class="service-card__blur" aria-hidden="true">
+            <span class="service-card__blur-layer service-card__blur-layer--1"></span>
+            <span class="service-card__blur-layer service-card__blur-layer--2"></span>
+            <span class="service-card__blur-layer service-card__blur-layer--3"></span>
+            <span class="service-card__blur-layer service-card__blur-layer--4"></span>
+            <span class="service-card__blur-layer service-card__blur-layer--5"></span>
+          </div>
+          <div class="service-card__vignette-top" aria-hidden="true"></div>
+          <div class="service-card__scrim" aria-hidden="true"></div>
+          <div class="service-card__icon">
+            <img class="service-card__icon-glyph" src="site-assets/icon-arrow-hover.svg" alt="" />
+          </div>
+          <div class="service-card__text">
+            <h3 class="service-card__heading">Mood &amp; Sleep</h3>
+            <p class="service-card__meta">
+              <img class="service-card__meta-dot" src="site-assets/dot-bullet.svg" alt="" />
+              <span>Mood, stress, sleep quality</span>
+            </p>
+          </div>
+        </article>
+
+        <article class="service-card">
+          <img class="service-card__image" src="site-assets/card-vitality.jpg" alt="Backlit leaf close-up" />
+          <div class="service-card__blur" aria-hidden="true">
+            <span class="service-card__blur-layer service-card__blur-layer--1"></span>
+            <span class="service-card__blur-layer service-card__blur-layer--2"></span>
+            <span class="service-card__blur-layer service-card__blur-layer--3"></span>
+            <span class="service-card__blur-layer service-card__blur-layer--4"></span>
+            <span class="service-card__blur-layer service-card__blur-layer--5"></span>
+          </div>
+          <div class="service-card__vignette-top" aria-hidden="true"></div>
+          <div class="service-card__scrim" aria-hidden="true"></div>
+          <div class="service-card__icon">
+            <img class="service-card__icon-glyph" src="site-assets/icon-arrow-hover.svg" alt="" />
+          </div>
+          <div class="service-card__text">
+            <h3 class="service-card__heading">Vitality</h3>
+            <p class="service-card__meta">
+              <img class="service-card__meta-dot" src="site-assets/dot-bullet.svg" alt="" />
+              <span>Energy, focus, everyday drive</span>
+            </p>
+          </div>
+        </article>
+
+        <article class="service-card">
+          <img class="service-card__image" src="site-assets/card-gut-immunity.jpg" alt="Hands resting on shoulders" />
+          <div class="service-card__blur" aria-hidden="true">
+            <span class="service-card__blur-layer service-card__blur-layer--1"></span>
+            <span class="service-card__blur-layer service-card__blur-layer--2"></span>
+            <span class="service-card__blur-layer service-card__blur-layer--3"></span>
+            <span class="service-card__blur-layer service-card__blur-layer--4"></span>
+            <span class="service-card__blur-layer service-card__blur-layer--5"></span>
+          </div>
+          <div class="service-card__vignette-top" aria-hidden="true"></div>
+          <div class="service-card__scrim" aria-hidden="true"></div>
+          <div class="service-card__icon">
+            <img class="service-card__icon-glyph" src="site-assets/icon-arrow-hover.svg" alt="" />
+          </div>
+          <div class="service-card__text">
+            <h3 class="service-card__heading">Gut &amp; Immunity</h3>
+            <p class="service-card__meta">
+              <img class="service-card__meta-dot" src="site-assets/dot-bullet.svg" alt="" />
+              <span>Digestion, immunity, gut health</span>
+            </p>
+          </div>
+        </article>
+    </div>
+  </section>
+
+  <section class="how">
+    <div class="how__card">
+      <div class="how__header">
+        <div class="how__heading-group">
+          <div class="how__eyebrow">
+            <img class="how__eyebrow-dot" src="site-assets/dot-eyebrow.svg" alt="" />
+            <span>How PHYX works</span>
+          </div>
+          <h2 class="how__heading">Simple, considered, doctor-led.</h2>
+        </div>
+        <button class="how__button" type="button">
+          <span class="btn-label"><span class="btn-label__track"><span>Start your free assessment</span><span aria-hidden="true">Start your free assessment</span></span></span>
+        </button>
+      </div>
+
+      <div class="how__grid">
+        <article class="step-card">
+          <div class="step-card__image-wrap">
+            <img class="step-card__image" src="site-assets/card-1-focus.jpg" alt="Man stretching his arm during a gym warm-up" />
+            <p class="step-card__number">01</p>
+          </div>
+          <div class="step-card__content">
+            <div class="step-card__eyebrow">
+              <img class="step-card__eyebrow-dot" src="site-assets/dot-step.svg" alt="" />
+              <span>Step 1</span>
+            </div>
+            <div class="step-card__text">
+              <h3 class="step-card__heading">Tell us your focus</h3>
+              <p class="step-card__body">A few quick questions about what you want to work on and your health background. Takes about three minutes.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="step-card">
+          <div class="step-card__image-wrap">
+            <img class="step-card__image" src="site-assets/card-2-review.jpg" alt="Macro shot of translucent teal fluid bubbles" />
+            <p class="step-card__number">02</p>
+          </div>
+          <div class="step-card__content">
+            <div class="step-card__eyebrow">
+              <img class="step-card__eyebrow-dot" src="site-assets/dot-step.svg" alt="" />
+              <span>Step 2</span>
+            </div>
+            <div class="step-card__text">
+              <h3 class="step-card__heading">Free 15-min clinical review</h3>
+              <p class="step-card__body">Chat with an Australian-registered nurse to see if PHYX is right for you. No cost, no obligation.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="step-card">
+          <div class="step-card__image-wrap">
+            <img class="step-card__image" src="site-assets/card-3-care.jpg" alt="Woman wearing headphones checking her phone at a stadium track" />
+            <p class="step-card__number">03</p>
+          </div>
+          <div class="step-card__content">
+            <div class="step-card__eyebrow">
+              <img class="step-card__eyebrow-dot" src="site-assets/dot-step.svg" alt="" />
+              <span>Step 3</span>
+            </div>
+            <div class="step-card__text">
+              <h3 class="step-card__heading">Your personalised care</h3>
+              <p class="step-card__body">Your plan unlocks in your patient portal. If it's the right fit, you'll speak with an Australian doctor about next steps.</p>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="split">
+    <div class="split__container">
+      <div class="split__media">
+        <img class="split__photo" src="site-assets/split-made-properly.jpg" alt="Woman in white activewear throwing a punch in boxing gloves" />
+        <img class="split__glow" src="site-assets/split-glow.svg" alt="" aria-hidden="true" />
+      </div>
+
+      <div class="split__content">
+        <div class="split__headline">
+          <div class="split__eyebrow">
+            <img class="split__eyebrow-dot" src="site-assets/dot-eyebrow.svg" alt="" />
+            <span>Made properly, in Australia</span>
+          </div>
+
+          <div class="split__copy">
+            <h2 class="split__heading">The difference is in<br />how it's made.</h2>
+
+            <div class="split__body-group">
+              <p class="split__body">PHYX partners with an Australian compounding pharmacy under the care of AHPRA-registered doctors. Every treatment starts with a proper conversation, not a checkout.</p>
+
+              <ul class="split__list">
+                <li class="split__list-item">
+                  <img class="split__check" src="site-assets/icon-check.svg" alt="" />
+                  <span>Australian owned and operated</span>
+                </li>
+                <li class="split__list-item">
+                  <img class="split__check" src="site-assets/icon-check.svg" alt="" />
+                  <span>Sterile compounding pharmacy</span>
+                </li>
+                <li class="split__list-item">
+                  <img class="split__check" src="site-assets/icon-check.svg" alt="" />
+                  <span>Doctor-led at every step</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</body>
+</html>
