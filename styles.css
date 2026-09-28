@@ -57,6 +57,46 @@ button:focus-visible .btn-label__track {
 }
 
 /* ============================================================
+   Shared — Eyebrow scroll reveal
+
+   Deliberately unprefixed: every section eyebrow (hero, services, how,
+   split) fades and lifts in the first time it scrolls into view. Toggled
+   by scroll-effects.js adding `.is-visible` via IntersectionObserver;
+   starts already-visible so content isn't hidden if JS fails to load.
+   ============================================================ */
+
+:root {
+  --eyebrow-reveal-distance: 16px;
+  --eyebrow-reveal-duration: 700ms;
+  --eyebrow-reveal-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.eyebrow-reveal {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.eyebrow-reveal.js-reveal-ready {
+  opacity: 0;
+  transform: translateY(var(--eyebrow-reveal-distance));
+  transition: opacity var(--eyebrow-reveal-duration) var(--eyebrow-reveal-ease),
+    transform var(--eyebrow-reveal-duration) var(--eyebrow-reveal-ease);
+}
+
+.eyebrow-reveal.js-reveal-ready.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eyebrow-reveal.js-reveal-ready {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ============================================================
    Primary Navigation
    ============================================================ */
 

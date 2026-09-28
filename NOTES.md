@@ -100,9 +100,19 @@ Implemented as the unprefixed `.btn-label` / `.btn-label__track` pair at the top
 
 The curve overshoots roughly 2px past the line, briefly exposing a sliver below the second copy. That sliver lands in the line box's descender space, so nothing legible is clipped.
 
+## Eyebrow Scroll Reveal
+
+Each section's eyebrow (hero, services, how, split — not the per-card `step-card__eyebrow`, which already has its own hover treatment) fades and lifts 16px the first time it scrolls into view, via `scroll-effects.js`.
+
+- Markup: the shared, unprefixed `eyebrow-reveal` class sits alongside each section's own `*__eyebrow` class.
+- `scroll-effects.js` adds `js-reveal-ready` (the actual hidden/transition state) at runtime, then uses one `IntersectionObserver` (40% visible threshold) to add `is-visible` and unobserve once triggered — a one-shot reveal, not a repeating scroll effect.
+- Starting from a plain, visible `.eyebrow-reveal` and only opting into the hidden state once JS confirms it can run (and un-hides it entirely if `prefers-reduced-motion: reduce`) means content never gets stuck hidden if the script fails to load.
+- Motion: `700ms cubic-bezier(0.22, 1, 0.36, 1)` — the same ease-out curve used for hover transitions elsewhere on the page, reused here for consistency (no reveal-specific timing was available from Figma).
+
 ## Files
 
 - `index.html` — all five sections' markup, in page order
-- `styles.css` — shared button motion first, then all five sections' styles, grouped by section with prefixed tokens/classes (`nav-`/`.nav__…`, `hero-`/`.hero__…`, `how-`/`.how__…`, `services-`/`.services__…`, `split-`/`.split__…`) to avoid collisions
+- `styles.css` — shared button motion and eyebrow scroll reveal first, then all five sections' styles, grouped by section with prefixed tokens/classes (`nav-`/`.nav__…`, `hero-`/`.hero__…`, `how-`/`.how__…`, `services-`/`.services__…`, `split-`/`.split__…`) to avoid collisions
+- `scroll-effects.js` — IntersectionObserver-driven eyebrow reveal (see above)
 - `server.js` — static file server for local preview (port `4173`, override with `PORT` env var)
 - `site-assets/` — all photos, icons, and logo exported from Figma across the five sections
