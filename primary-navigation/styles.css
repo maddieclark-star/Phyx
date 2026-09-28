@@ -1,0 +1,139 @@
+:root {
+  /* Color */
+  --nav-surface-primary: #ffffff;
+  --nav-surface-accent-light: #a5e9ec;
+  --nav-surface-accent-dark: #122e30;
+  --nav-cta-text-secondary: #122e30;
+  --nav-text-primary-invert: #ffffff;
+
+  /* Typography */
+  --nav-font-body: 'DM Sans', sans-serif;
+  --nav-font-button: 'DM Mono', monospace;
+
+  --nav-text-body-sm: 16px;
+  --nav-line-height-body-sm: 24px;
+  --nav-font-weight-body-strong: 500;
+
+  --nav-text-button-sm: 14px;
+  --nav-line-height-button-sm: 24px;
+  --nav-letter-spacing-button-sm: 0.28px;
+  --nav-font-weight-button: 500;
+
+  /* Spacing */
+  --nav-spacing-150: 12px;
+  --nav-spacing-300: 24px;
+  --nav-spacing-400: 32px;
+  --nav-spacing-menu-logo: 48px;
+
+  /* Layout */
+  --nav-max-width: 1440px;
+  --nav-padding-x: 80px;
+  --nav-height: 72px;
+  --nav-inner-padding-y: 12px;
+
+  /* Radius */
+  --nav-radius-rounded: 1000px;
+
+  /* Button padding */
+  --nav-button-padding-x: 16px;
+  --nav-button-padding-y: 10px;
+  --nav-button-gap: 4px;
+}
+
+.nav {
+  width: 100%;
+  max-width: var(--nav-max-width);
+  height: var(--nav-height);
+  margin: 0 auto;
+  padding: 0 var(--nav-padding-x);
+  background: transparent;
+  box-sizing: border-box;
+}
+
+.nav__container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  padding: var(--nav-inner-padding-y) 0;
+  border-radius: var(--nav-radius-rounded);
+  box-sizing: border-box;
+}
+
+.nav__menu-group {
+  display: flex;
+  align-items: center;
+  gap: var(--nav-spacing-menu-logo);
+}
+
+.nav__logo {
+  display: block;
+  width: 144.31px;
+  height: 27.11px;
+}
+
+.nav__links {
+  display: flex;
+  align-items: center;
+  gap: var(--nav-spacing-300);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav__link {
+  font-family: var(--nav-font-body);
+  font-weight: var(--nav-font-weight-body-strong);
+  font-size: var(--nav-text-body-sm);
+  line-height: var(--nav-line-height-body-sm);
+  color: var(--nav-text-primary-invert);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.nav__utilities {
+  display: flex;
+  align-items: center;
+  gap: var(--nav-spacing-400);
+}
+
+.nav__ctas {
+  display: flex;
+  align-items: center;
+  gap: var(--nav-spacing-150);
+}
+
+.nav__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--nav-button-gap);
+  padding: var(--nav-button-padding-y) var(--nav-button-padding-x);
+  border-radius: var(--nav-radius-rounded);
+  border: none;
+  cursor: pointer;
+  font-family: var(--nav-font-button);
+  font-weight: var(--nav-font-weight-button);
+  font-size: var(--nav-text-button-sm);
+  line-height: var(--nav-line-height-button-sm);
+  letter-spacing: var(--nav-letter-spacing-button-sm);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.nav__button--primary {
+  background: var(--nav-surface-accent-light);
+  color: var(--nav-cta-text-secondary);
+}
+
+.nav__button--secondary {
+  background: var(--nav-surface-primary);
+  color: var(--nav-cta-text-secondary);
+}
+
+/* Demo-only backdrop so the transparent nav is visible against something.
+   Not part of the nav component itself. */
+.demo-backdrop {
+  min-height: 100vh;
+  background: linear-gradient(160deg, #0c2b2e 0%, #163f42 45%, #2f6e73 100%);
+}

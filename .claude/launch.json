@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "primary-navigation",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["/Users/maddie.clark/Desktop/PHYX/primary-navigation/server.js"],
+      "port": 4173
+    }
+  ]
+}
