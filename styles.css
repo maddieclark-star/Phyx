@@ -115,7 +115,7 @@ button:focus-visible .btn-label__track {
   --text-reveal-duration: 620ms;
   --text-reveal-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --text-reveal-stagger: 16ms;
-  --text-reveal-base-delay: 250ms;
+  --text-reveal-base-delay: 450ms;
   --text-reveal-distance: 0.3em;
   --text-reveal-blur: 6px;
 }
@@ -170,6 +170,27 @@ button:focus-visible .btn-label__track {
 }
 
 /* ============================================================
+   Shared — Lenis-driven image parallax
+
+   Deliberately unprefixed: any image flagged data-parallax in the markup
+   picks this up. lenis-scroll.js writes --parallax-y as the element crosses
+   the viewport; riding Lenis's smoothed scroll rather than the raw native
+   scroll keeps the drift free of the jitter a directly-coupled scroll
+   listener would have.
+   ============================================================ */
+
+[data-parallax] {
+  transform: translateY(var(--parallax-y, 0px));
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-parallax] {
+    transform: none;
+  }
+}
+
+/* ============================================================
    Primary Navigation
    ============================================================ */
 
@@ -187,7 +208,17 @@ button:focus-visible .btn-label__track {
 
   --nav-text-body-sm: 16px;
   --nav-line-height-body-sm: 24px;
-  --nav-font-weight-body-strong: 500;
+  --nav-font-weight-body-regular: 300;
+
+  /* On-scroll (sticky) variant */
+  --nav-sticky-surface: #ffffff;
+  --nav-sticky-border: #fbf8f1;
+  --nav-sticky-text: #2a4345;
+  --nav-sticky-duration: 320ms;
+  --nav-sticky-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --nav-slide-duration: 520ms;
+  --nav-slide-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --nav-sticky-button-border: rgba(31, 199, 207, 0.8);
 
   --nav-text-button-sm: 14px;
   --nav-line-height-button-sm: 24px;
@@ -225,7 +256,61 @@ button:focus-visible .btn-label__track {
   height: var(--nav-height);
   padding: 0 var(--nav-padding-x);
   background: transparent;
+  border-bottom: 1px solid transparent;
   box-sizing: border-box;
+  transition: background-color var(--nav-sticky-duration) var(--nav-sticky-ease),
+    border-color var(--nav-sticky-duration) var(--nav-sticky-ease);
+}
+
+/* On-scroll (sticky) variant — engaged once the services section reaches the
+   top of the viewport (see nav-scroll.js), pinning the bar to the viewport
+   instead of scrolling away with the hero. It slides down from just above the
+   viewport rather than appearing in place. */
+.nav.nav--sticky {
+  position: fixed;
+  transform: translateY(0);
+  background: var(--nav-sticky-surface);
+  border-bottom-color: var(--nav-sticky-border);
+  will-change: transform;
+  transition: transform var(--nav-slide-duration) var(--nav-slide-ease),
+    background-color var(--nav-sticky-duration) var(--nav-sticky-ease),
+    border-color var(--nav-sticky-duration) var(--nav-sticky-ease);
+}
+
+/* Off-screen start/end position. `--entering` is applied for a single frame
+   with transitions off so the bar jumps above the viewport before sliding in;
+   `--leaving` transitions back out the same way. */
+.nav.nav--sticky.nav--entering,
+.nav.nav--sticky.nav--leaving {
+  transform: translateY(-100%);
+}
+
+.nav.nav--sticky.nav--entering {
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav.nav--sticky {
+    transition: none;
+  }
+
+  .nav.nav--sticky.nav--leaving {
+    transform: translateY(0);
+  }
+}
+
+.nav.nav--sticky .nav__link,
+.nav.nav--sticky .nav__button--secondary {
+  color: var(--nav-sticky-text);
+  transition: color var(--nav-sticky-duration) var(--nav-sticky-ease);
+}
+
+.nav.nav--sticky .nav__link {
+  transition: color var(--nav-sticky-duration) var(--nav-sticky-ease), transform var(--btn-motion-duration) var(--btn-motion-ease);
+}
+
+.nav.nav--sticky .nav__button--secondary {
+  border-color: var(--nav-sticky-button-border);
 }
 
 .nav__container {
@@ -245,9 +330,31 @@ button:focus-visible .btn-label__track {
 }
 
 .nav__logo {
+  position: relative;
   display: block;
   width: 144.31px;
   height: 27.11px;
+}
+
+.nav__logo-img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  transition: opacity var(--nav-sticky-duration) var(--nav-sticky-ease);
+}
+
+.nav__logo-img--reversed {
+  opacity: 0;
+}
+
+.nav--sticky .nav__logo-img--default {
+  opacity: 0;
+}
+
+.nav--sticky .nav__logo-img--reversed {
+  opacity: 1;
 }
 
 .nav__links {
@@ -260,13 +367,29 @@ button:focus-visible .btn-label__track {
 }
 
 .nav__link {
+  display: inline-block;
   font-family: var(--nav-font-body);
-  font-weight: var(--nav-font-weight-body-strong);
+  font-weight: var(--nav-font-weight-body-regular);
   font-size: var(--nav-text-body-sm);
   line-height: var(--nav-line-height-body-sm);
   color: var(--nav-text-primary-invert);
   text-decoration: none;
   white-space: nowrap;
+  transition: transform var(--btn-motion-duration) var(--btn-motion-ease);
+}
+
+/* Subtle hover bounce — reuses the same spring easing as the button label
+   swap (--btn-motion-ease) so it reads as the same "considered" motion
+   language rather than a separate hover effect. */
+.nav__link:hover,
+.nav__link:focus-visible {
+  transform: translateY(-3px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav__link {
+    transition: none;
+  }
 }
 
 .nav__utilities {
@@ -289,7 +412,7 @@ button:focus-visible .btn-label__track {
   gap: var(--nav-button-gap);
   padding: var(--nav-button-padding-y) var(--nav-button-padding-x);
   border-radius: var(--nav-radius-rounded);
-  border: none;
+  border: 1px solid transparent;
   cursor: pointer;
   font-family: var(--nav-font-button);
   font-weight: var(--nav-font-weight-button);
@@ -298,7 +421,8 @@ button:focus-visible .btn-label__track {
   letter-spacing: var(--nav-letter-spacing-button-sm);
   text-transform: uppercase;
   white-space: nowrap;
-  transition: background-color var(--btn-colour-duration) var(--btn-colour-ease);
+  transition: background-color var(--btn-colour-duration) var(--btn-colour-ease),
+    border-color var(--nav-sticky-duration) var(--nav-sticky-ease);
 }
 
 .nav__button--primary {
@@ -333,7 +457,10 @@ button:focus-visible .btn-label__track {
   --hero-eyebrow-dot: #1fc7cf;
   --hero-gradient-mid-1: #3f7a7d;
   --hero-gradient-mid-2: #79dde2;
-  --hero-gradient-end: #fcfaf5;
+  /* Matches --services-surface-tertiary exactly so the fade lands on the
+     next section's own background colour instead of a near-miss that reads
+     as a seam at the boundary. */
+  --hero-gradient-end: #fbf8f1;
 
   /* Typography */
   --hero-font-heading: 'P22 Mackinac Pro', 'Fraunces', Georgia, serif;
@@ -378,23 +505,47 @@ button:focus-visible .btn-label__track {
 }
 
 .hero {
+  /* Written by lenis-scroll.js. Declared here rather than on .hero__media so
+     it inherits down to the image AND stays readable by the section itself
+     for the margin-bottom claw-back below. */
+  --hero-media-lift: 0px;
+  /* As the media lifts it uncovers hero gradient beneath it — at full lift
+     that turned a 90px design gap into 270px of dead space above "Explore".
+     Pulling the hero's bottom edge up by a fraction of the lift lets the
+     services section (and everything after it) rise to reclaim 40% of that
+     space, without touching the at-rest spacing, since the lift is 0 there. */
+  --hero-services-cover: 0.6;
   position: relative;
   width: 100%;
-  padding-bottom: 16px;
+  padding-bottom: 13px;
+  margin-bottom: calc(var(--hero-media-lift) * -1 * var(--hero-services-cover));
+  /* Resolves to the end colour by 86%, NOT 100%. The services section now
+     overlaps the hero's last ~10% (see margin-bottom above), so a fade that
+     finished at 100% got clipped mid-teal and met the cream section as a
+     hard seam. Finishing early means the visible bottom edge is always
+     already cream; the flat band below it is hidden under services at
+     scroll, and invisible at rest since it's the same colour. */
   background: linear-gradient(
     180deg,
     var(--hero-surface-accent-dark) 51.566%,
-    var(--hero-gradient-mid-1) 68.37%,
-    var(--hero-gradient-mid-2) 80.497%,
-    var(--hero-gradient-end) 98.975%
+    var(--hero-gradient-mid-1) 65%,
+    var(--hero-gradient-mid-2) 76%,
+    var(--hero-gradient-end) 86%
   );
   overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero {
+    margin-bottom: 0;
+  }
 }
 
 /* ---------- Header ---------- */
 
 .hero__header {
   position: relative;
+  z-index: 1;
   padding: var(--hero-header-pt) var(--hero-padding-x) var(--hero-header-pb);
   overflow: hidden;
 }
@@ -531,11 +682,19 @@ button:focus-visible .btn-label__track {
 
 .hero__media {
   position: relative;
+  z-index: 2;
   width: calc(100% - (var(--hero-media-margin) * 2));
   aspect-ratio: 1408 / 544;
   margin: 0 auto;
   border-radius: var(--hero-media-radius);
   overflow: hidden;
+  transform: translateY(calc(var(--hero-media-lift) * -1));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__media {
+    transform: none;
+  }
 }
 
 .hero__photo {
@@ -1069,6 +1228,13 @@ button:focus-visible .btn-label__track {
   object-position: center;
 }
 
+/* Cards 1 and 3's source photos run darker/moodier than card 2 — lightened
+   to even out the row's exposure. */
+.step-card:nth-child(1) .step-card__image,
+.step-card:nth-child(3) .step-card__image {
+  filter: brightness(1.35);
+}
+
 .step-card__content {
   position: relative;
   display: flex;
@@ -1193,6 +1359,7 @@ button:focus-visible .btn-label__track {
   /* Layout */
   --services-padding-x: 80px;
   --services-padding-y: 96px;
+  --services-padding-top: 77px;
 
   /* Spacing */
   --services-gap-header-grid: 64px;
@@ -1212,9 +1379,17 @@ button:focus-visible .btn-label__track {
   --services-duration: 500ms;
 }
 
+/* Positioned + raised so its opaque background paints over the hero gradient
+   it now overlaps (see .hero's margin-bottom claw-back). .hero is itself
+   positioned, so without this the hero would paint on top of the overlap.
+   Stays below .hero__media's z-index 2, though the cover factor is < 1 so
+   the gap only ever shrinks toward its 90px resting value, never to zero —
+   the section can't collide with the image. */
 .services {
+  position: relative;
+  z-index: 1;
   width: 100%;
-  padding: var(--services-padding-y) var(--services-padding-x);
+  padding: var(--services-padding-top) var(--services-padding-x) var(--services-padding-y);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1305,22 +1480,32 @@ button:focus-visible .btn-label__track {
 }
 
 .service-card__image {
+  --service-card-zoom-base: 1;
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center;
-  transform: scale(1);
+  transform: scale(var(--service-card-zoom-base));
   transition: transform calc(var(--services-duration) * 1.4) var(--services-ease);
 }
 
+/* Source photo is a tall 600x900 portrait with the subject sitting low in
+   frame, so cover-fitting it leaves ~99px of vertical overflow to pan.
+   NOTE the direction: a HIGH object-position percentage anchors the crop to
+   the BOTTOM of the photo, which pulls the subject UP the card — a low
+   value does the opposite and buries her behind the scrim/heading. 80%
+   lands her face around 44% down, clear of the label, with her raised arms
+   still in frame. The base zoom then trims the dead sky so she fills the
+   card rather than floating in empty space. */
 .service-card:nth-child(1) .service-card__image {
-  object-position: center 20%;
+  --service-card-zoom-base: 1.15;
+  object-position: center 80%;
 }
 
 .service-card:hover .service-card__image {
-  transform: scale(1.1);
+  transform: scale(calc(var(--service-card-zoom-base) * 1.1));
 }
 
 .service-card__blur {
@@ -1366,21 +1551,6 @@ button:focus-visible .btn-label__track {
   --blur-amount: 28px;
   --mask-solid: 22%;
   --mask-fade: 50%;
-}
-
-.service-card__vignette-top {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 70px;
-  background: linear-gradient(to bottom, rgba(18, 46, 48, 0.35), rgba(18, 46, 48, 0));
-  opacity: 1;
-  transition: opacity var(--services-duration) var(--services-ease);
-}
-
-.service-card:hover .service-card__vignette-top {
-  opacity: 0;
 }
 
 .service-card__scrim {
@@ -1492,6 +1662,44 @@ button:focus-visible .btn-label__track {
   line-height: var(--services-line-caption);
   color: var(--services-text-secondary-invert);
   white-space: normal;
+}
+
+/* ---------- Second row scroll reveal ----------
+   Toggled by scroll-effects.js adding `.is-visible` via IntersectionObserver,
+   same pattern as the eyebrow/heading reveals above. --sc-i (set inline per
+   card) staggers the row so the cards settle in left-to-right. */
+
+:root {
+  --service-card-reveal-distance: 32px;
+  --service-card-reveal-duration: 700ms;
+  --service-card-reveal-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --service-card-reveal-stagger: 90ms;
+}
+
+.service-card--reveal {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.service-card--reveal.js-reveal-ready {
+  opacity: 0;
+  transform: translateY(var(--service-card-reveal-distance));
+  transition: opacity var(--service-card-reveal-duration) var(--service-card-reveal-ease),
+    transform var(--service-card-reveal-duration) var(--service-card-reveal-ease);
+  transition-delay: calc(var(--sc-i, 0) * var(--service-card-reveal-stagger));
+}
+
+.service-card--reveal.js-reveal-ready.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .service-card--reveal.js-reveal-ready {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
 
 /* ---------- Responsive (desktop breakpoints) ---------- */
@@ -1615,6 +1823,7 @@ button:focus-visible .btn-label__track {
   width: 139.16%;
   height: 185.8%;
   transform: translate(-50%, -50%) rotate(90deg);
+  filter: brightness(1.15);
   pointer-events: none;
 }
 
@@ -1717,6 +1926,41 @@ button:focus-visible .btn-label__track {
   width: 16px;
   height: 16px;
   flex-shrink: 0;
+}
+
+/* ---------- List reveal (mouse-enter, chronological) ----------
+   Toggled by split-reveal.js adding first `.js-reveal-ready` (on load) then
+   `.is-visible` (on mouseenter, once the heading's own text-reveal sequence
+   has finished) — same ready/visible two-step as the other scroll reveals,
+   just triggered by hover instead of IntersectionObserver. --split-item-i
+   (set inline per item) staggers the list top to bottom. */
+
+:root {
+  --split-list-reveal-distance: 12px;
+  --split-list-reveal-duration: 500ms;
+  --split-list-reveal-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --split-list-reveal-stagger: 140ms;
+}
+
+.split__list.js-reveal-ready .split__list-item {
+  opacity: 0;
+  transform: translateX(calc(var(--split-list-reveal-distance) * -1));
+  transition: opacity var(--split-list-reveal-duration) var(--split-list-reveal-ease),
+    transform var(--split-list-reveal-duration) var(--split-list-reveal-ease);
+  transition-delay: calc(var(--split-item-i, 0) * var(--split-list-reveal-stagger));
+}
+
+.split__list.js-reveal-ready.is-visible .split__list-item {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .split__list.js-reveal-ready .split__list-item {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
 
 /* ---------- Responsive (desktop breakpoints) ---------- */
@@ -1994,6 +2238,17 @@ button:focus-visible .btn-label__track {
   object-fit: fill;
 }
 
+/* Card 3's source photo carries a blank white band across its own top ~22%
+   (baked into the export). The shared `center bottom` crop above anchors to
+   the photo's bottom, which pushes the window down far enough to slice her
+   face off the top edge. Anchoring to the top instead lands the window at
+   source y 284–837: clear of the band by ~59px, with her sunglasses ~19%
+   and mouth ~48% down the card. The wrap is sized in percentages against a
+   fixed card aspect-ratio, so this crop is identical at every width. */
+.article-card:nth-child(3) .article-card__image {
+  object-position: center top;
+}
+
 .article-card__overlay {
   position: absolute;
   inset: 0;
@@ -2157,6 +2412,45 @@ button:focus-visible .btn-label__track {
   color: var(--article-text-secondary-invert);
 }
 
+/* ---------- Scroll reveal ----------
+   Toggled by scroll-effects.js adding `.is-visible` via IntersectionObserver,
+   same pattern as the services row. --ac-i (set inline per card) staggers
+   the row so the cards slide in left to right, one cohesive sweep rather
+   than three cards animating independently. */
+
+:root {
+  --article-card-reveal-distance: 48px;
+  --article-card-reveal-duration: 700ms;
+  --article-card-reveal-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --article-card-reveal-stagger: 140ms;
+}
+
+.article-card--reveal {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.article-card--reveal.js-reveal-ready {
+  opacity: 0;
+  transform: translateX(calc(var(--article-card-reveal-distance) * -1));
+  transition: opacity var(--article-card-reveal-duration) var(--article-card-reveal-ease),
+    transform var(--article-card-reveal-duration) var(--article-card-reveal-ease);
+  transition-delay: calc(var(--ac-i, 0) * var(--article-card-reveal-stagger));
+}
+
+.article-card--reveal.js-reveal-ready.is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .article-card--reveal.js-reveal-ready {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
 /* ---------- Responsive (desktop breakpoints) ---------- */
 
 @media (max-width: 1200px) {
@@ -2256,7 +2550,9 @@ button:focus-visible .btn-label__track {
   /* Motion */
   --faq-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --faq-duration: 500ms;
-  --faq-icon-duration: 320ms;
+  --faq-icon-duration: 500ms;
+  --faq-answer-duration: 280ms;
+  --faq-answer-delay: 120ms;
 }
 
 .faq {
@@ -2363,6 +2659,51 @@ button:focus-visible .btn-label__track {
   width: 144.174%;
   height: 69.3653%;
   transform: rotate(90deg);
+}
+
+/* ---------- Lava-lamp drift ----------
+   Each blob gets its own translate+scale loop, applied on the outer .faq__glow
+   wrapper so it composes with the inner element's own static rotate rather
+   than overwriting it. Durations are mutually prime-ish (17s/23s/29s) so the
+   three never fall back into a synchronised pattern — the backdrop keeps
+   drifting rather than visibly looping. */
+
+@keyframes faq-lava-a {
+  0%, 100% { transform: translate(0%, 0%) scale(1); }
+  33% { transform: translate(5%, 6%) scale(1.1); }
+  66% { transform: translate(-4%, 3%) scale(0.95); }
+}
+
+@keyframes faq-lava-b {
+  0%, 100% { transform: translate(0%, 0%) scale(1); }
+  40% { transform: translate(-6%, 4%) scale(0.92); }
+  75% { transform: translate(3%, -5%) scale(1.07); }
+}
+
+@keyframes faq-lava-c {
+  0%, 100% { transform: translate(0%, 0%) scale(1); }
+  45% { transform: translate(4%, -6%) scale(1.08); }
+  80% { transform: translate(-5%, -2%) scale(0.93); }
+}
+
+.faq__glow--a {
+  animation: faq-lava-a 17s ease-in-out infinite;
+}
+
+.faq__glow--b {
+  animation: faq-lava-b 23s ease-in-out infinite;
+}
+
+.faq__glow--c {
+  animation: faq-lava-c 29s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq__glow--a,
+  .faq__glow--b,
+  .faq__glow--c {
+    animation: none;
+  }
 }
 
 /* ---------- Header ---------- */
@@ -2512,11 +2853,25 @@ button:focus-visible .btn-label__track {
   height: auto;
 }
 
+/* Fades in behind the panel's height transition (delayed on open so it
+   reads as following the reveal, immediate on close) rather than snapping
+   into view the instant the clipping mask uncovers it — makes the two
+   motions feel like one cascade instead of two unrelated animations. */
 .faq-item__answer {
   display: flex;
   flex-direction: column;
   gap: var(--faq-gap-paragraphs);
   padding-top: var(--faq-gap-answer);
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity var(--faq-answer-duration) var(--faq-ease),
+    transform var(--faq-answer-duration) var(--faq-ease);
+}
+
+.faq-item.is-open .faq-item__answer {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: var(--faq-answer-delay);
 }
 
 .faq-item__answer p {
@@ -2535,6 +2890,12 @@ button:focus-visible .btn-label__track {
   }
 
   .faq-item__icon-img {
+    transition: none;
+  }
+
+  .faq-item__answer {
+    opacity: 1;
+    transform: none;
     transition: none;
   }
 }
@@ -2567,14 +2928,19 @@ button:focus-visible .btn-label__track {
 /* object-fit: cover rather than Figma's explicit width+height percentages —
    those scale the two axes independently, so the photo visibly warps as the
    banner's aspect ratio drifts from the 1368x494 reference. */
+/* Height/top bleed past the frame gives the lenis parallax (data-parallax,
+   see lenis-scroll.js) room to translate the photo without exposing empty
+   edges past the banner's own overflow:hidden clip. */
 .faq-banner__photo {
   position: absolute;
-  inset: 0;
+  left: 0;
+  right: 0;
+  top: -15%;
   display: block;
   width: 100%;
-  height: 100%;
+  height: 130%;
   object-fit: cover;
-  object-position: 85% 28%;
+  object-position: 85% 43%;
 }
 
 .faq-banner__scrim {

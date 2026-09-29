@@ -1,6 +1,9 @@
 /* Hero media motion:
-   1. Scroll-triggered reveal — the arc stroke draws clockwise, then the four
-      USP badges pop in one after another (timings live in styles.css).
+   1. Reveal — the arc stroke draws clockwise, then the four USP badges pop
+      in one after another (timings live in styles.css). Waits for the
+      cursor to actually enter the page, then a small pause, before playing
+      — rather than firing the instant the hero scrolls into view (which for
+      an above-the-fold hero is essentially immediately on load).
    2. Magnetic pull — badges drift toward the cursor as it approaches. */
 (function () {
   var media = document.querySelector('.hero__media');
@@ -18,14 +21,37 @@
 
   /* ---------- Reveal sequence ---------- */
 
-  if ('IntersectionObserver' in window) {
-    media.classList.add('js-seq-ready');
+  var REVEAL_DELAY = 500;
+  var played = false;
 
+  function reveal() {
+    if (played) return;
+    played = true;
+    media.classList.add('is-revealed');
+  }
+
+  media.classList.add('js-seq-ready');
+
+  // Primary trigger: mouse enters the page. mouseenter doesn't bubble, but
+  // attached directly to documentElement it still fires once the pointer
+  // crosses into the viewport.
+  document.documentElement.addEventListener(
+    'mouseenter',
+    function onFirstMouseEnter() {
+      document.documentElement.removeEventListener('mouseenter', onFirstMouseEnter);
+      setTimeout(reveal, REVEAL_DELAY);
+    },
+    { once: true }
+  );
+
+  // Fallback for touch/no-mouse visitors, who never fire mouseenter — plays
+  // once the hero scrolls into view instead, so it isn't stuck hidden.
+  if ('IntersectionObserver' in window) {
     var observer = new IntersectionObserver(
       function (entries, obs) {
         entries.forEach(function (entry) {
           if (!entry.isIntersecting) return;
-          entry.target.classList.add('is-revealed');
+          setTimeout(reveal, REVEAL_DELAY);
           obs.unobserve(entry.target);
         });
       },
