@@ -1,6 +1,6 @@
 # PHYX Landing Page
 
-Single-page site, in page order: primary navigation (overlaid on the hero), hero banner, services, how-it-works, image-left-right, article section, and FAQ/accordion. All markup lives in `index.html`, all styles in `styles.css` (grouped by section, with section-prefixed custom properties and class names to avoid collisions), and shared images/icons in `site-assets/`. Interaction JS is split by concern: `scroll-effects.js` (eyebrow reveal) and `accordion.js` (FAQ toggle). Run locally with `node server.js` (port `4173`).
+Single-page site, in page order: primary navigation (overlaid on the hero), hero banner, services, how-it-works, image-left-right, article section, FAQ/accordion, and footer. All markup lives in `index.html`, all styles in `styles.css` (grouped by section, with section-prefixed custom properties and class names to avoid collisions), and shared images/icons in `site-assets/`. Interaction JS is split by concern: `scroll-effects.js` (eyebrow reveal) and `accordion.js` (FAQ toggle). Run locally with `node server.js` (port `4173`).
 
 The one deliberate exception to the per-section prefixing is the shared `.btn-label` button motion at the top of `styles.css` — see [Button Motion](#button-motion).
 
@@ -127,6 +127,30 @@ Two layout details worth keeping in mind if this is edited:
 
 Copy: eyebrow "Common questions" → heading "Straight answers" → 6 Q&As (placeholder Lorem ipsum answers, see `index.html`) — "Is the 15-minute consult really free", "Who will I be speaking with?", "Do I have to buy anything after the consult?", "What happens if the doctor says PHYX isn't right for me?", "Is PHYX available across Australia?", "How is PHYX different from what I can buy online?". Banner: eyebrow "Doctor-led health, personalised" → heading "Ready when you are." → "Book a free 15-minute consult with an Australian-registered nurse. No obligation." → CTAs "Start your free assessment" / "Talk to a phyx nurse".
 
+## Footer
+
+Source: [Figma — PHYX Website Design](https://www.figma.com/design/7biT12cuYhYxDckJ5Rargr/PHYX-Website-Design?node-id=10283-17478), node `10283:17478` ("Footer"). Implemented as `.footer` / `.footer__…`, sitting directly under the FAQ CTA banner — outside `<section class="faq">`, as a real `<footer>` element.
+
+Brandmark + blurb on the left, three link columns (Explore / Company / Legal) on the right, then a gradient hairline divider, the full-width PHYX wordmark, and a bottom row of accreditations and copyright. Verified against Figma at 1440: section `1441×769.7` (Figma `1440×768.507`), wordmark `1281×240.7` (Figma `1280×240.507`), brandmark artwork `71.05px` inside its `74px` frame.
+
+**Brandmark rotation:** the circle device turns a full 360° about its vertical axis, on a loop, with a hold at each end — `@keyframes footer-brandmark-spin` over a `5s` cycle: hold at `0deg` for `0→1.1s` (0–22%), one full revolution `1.1→2.8s` (22–56%), hold at `360deg` for `2.8→5s` (56–100%). The doubled keyframe stops (`0%, 22%` and `56%, 100%`) are what create the pauses. Eased with `cubic-bezier(0.65, 0, 0.35, 1)` so the turn starts and settles softly rather than running at constant speed.
+
+- The frame carries `perspective: 600px` so the turn reads as a coin flip with depth instead of a flat horizontal squash.
+- The animation is on the `<img>`, not the frame: the artwork is inset inside its 74px frame in Figma (2.71% left, 2.6% top), so animating the image keeps the circle's own centre as the rotation origin rather than the frame's.
+- No Figma motion data existed for this (`get_motion_context` returned no animated nodes) — the timing was authored to the brief.
+- Suppressed under `prefers-reduced-motion`.
+
+**Known deviations from the Figma source:**
+- **Wordmark dot colour**: the vector asset `get_design_context` returned fills the dot above the X with `#E9F9FA`, but Figma's own render of the node — and the node-level SVG export — both give `#79DDE2` (the file's `surface-colour/surface-tertiary` token, which *is* in the footer's variable set; `#E9F9FA` is not). The one fill value in `footer-wordmark.svg` was corrected to `#79DDE2` to match the design.
+- **Divider**: Figma draws a 1px line with a `#1FC7CF` → white gradient at 64% stroke opacity. Implemented as a CSS gradient rather than an SVG so it scales with the container; the white end simply fades out against the footer's own background.
+- **Column headings use the shared `.eyebrow-reveal`**: they're the same `Eyebrow C2` component every section eyebrow uses, so they get the same scroll-in fade/lift. All three reveal together.
+- **Link hover**: Figma defines a `Body/Sm Body - Link` text style but no hover state. Links shift from `--footer-text-secondary` to `--footer-text-primary` on hover/focus, reusing the shared button colour timing.
+- **Menu items are real `<a href="#">` links** in three `<nav>` landmarks, rather than the plain text frames Figma has — swap in real destinations when routes exist.
+
+**Sizing notes:** the brand column is `flex: 0 0 auto` with a fixed `320px` right gutter (Figma's own `pr-[320px]`), which is what pushes the three link columns into the right half; they split the remainder as `flex: 1 1 0` with a `160px` floor. At ≤1200 the gutter drops to `120px` and padding to `48px`; at ≤1024 the menu wraps, the brand column goes full width, and the bottom row stacks.
+
+Copy: blurb "Doctor-led health, made in Australia. / AHPRA-registered doctors and a sterile compounding pharmacy." → Explore (Metabolism, Performance, Recovery, Mood & Sleep, Vitality, Gut & Immunity), Company (How it works, Labs, Academy, About, Contact), Legal (Privacy, Terms, TGA compliance) → bottom "AHPRA-registered · Sterile compounding pharmacy" / "© PHYX 2026. Australian owned."
+
 ## Button Motion
 
 Source: [Primary](https://www.figma.com/design/7biT12cuYhYxDckJ5Rargr/PHYX-Website-Design?node-id=10297-1185) (node `10297:1185`) and [Secondary](https://www.figma.com/design/7biT12cuYhYxDckJ5Rargr/PHYX-Website-Design?node-id=10297-1186) (node `10297:1186`).
@@ -159,8 +183,9 @@ Each section's eyebrow (hero, services, how, split, article, faq, and the FAQ CT
 
 ## Files
 
-- `index.html` — all six sections' markup, in page order
-- `styles.css` — shared button motion and eyebrow scroll reveal first, then all six sections' styles, grouped by section with prefixed tokens/classes (`nav-`/`.nav__…`, `hero-`/`.hero__…`, `how-`/`.how__…`, `services-`/`.services__…`, `split-`/`.split__…`, `article-`/`.article__…`) to avoid collisions
+- `index.html` — all sections' markup, in page order
+- `styles.css` — shared button motion and eyebrow scroll reveal first, then every section's styles, grouped by section with prefixed tokens/classes (`nav-`/`.nav__…`, `hero-`/`.hero__…`, `how-`/`.how__…`, `services-`/`.services__…`, `split-`/`.split__…`, `article-`/`.article__…`, `faq-`/`.faq__…`, `footer-`/`.footer__…`) to avoid collisions
 - `scroll-effects.js` — IntersectionObserver-driven eyebrow reveal (see above)
+- `accordion.js` — FAQ open/close height animation (see above)
 - `server.js` — static file server for local preview (port `4173`, override with `PORT` env var)
-- `site-assets/` — all photos, icons, and logo exported from Figma across the six sections
+- `site-assets/` — all photos, icons, and logos exported from Figma across every section
