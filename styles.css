@@ -97,6 +97,79 @@ button:focus-visible .btn-label__track {
 }
 
 /* ============================================================
+   Shared — Heading scroll-in text reveal
+
+   Every section heading (except the hero) reveals character-by-character
+   with a staggered blur-and-slide flourish the first time it scrolls into
+   view — same IntersectionObserver/threshold as the eyebrow-reveal above,
+   so the two fire off the same trigger point, but --text-reveal-base-delay
+   holds the heading back slightly so it reads as following the eyebrow
+   rather than landing simultaneously with it. text-reveal.js splits the
+   heading's real text into a visually-hidden accessible copy plus a
+   decorative per-character copy, then adds `.is-visible` once via
+   IntersectionObserver (unobserving after) — it does not replay. Starts
+   fully visible/static so content isn't hidden if JS fails to load.
+   ============================================================ */
+
+:root {
+  --text-reveal-duration: 620ms;
+  --text-reveal-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --text-reveal-stagger: 16ms;
+  --text-reveal-base-delay: 250ms;
+  --text-reveal-distance: 0.3em;
+  --text-reveal-blur: 6px;
+}
+
+.text-reveal .tr-visual {
+  display: contents;
+}
+
+.text-reveal .tr-word {
+  display: inline-block;
+}
+
+.text-reveal .tr-char {
+  display: inline-block;
+}
+
+.text-reveal .tr-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.text-reveal.js-reveal-ready .tr-char {
+  opacity: 0.35;
+  filter: blur(var(--text-reveal-blur));
+  transform: translateY(var(--text-reveal-distance));
+  transition: opacity var(--text-reveal-duration) var(--text-reveal-ease),
+    filter var(--text-reveal-duration) var(--text-reveal-ease),
+    transform var(--text-reveal-duration) var(--text-reveal-ease);
+  transition-delay: calc(var(--text-reveal-base-delay) + (var(--tr-i, 0) * var(--text-reveal-stagger)));
+}
+
+.text-reveal.js-reveal-ready.is-visible .tr-char {
+  opacity: 1;
+  filter: blur(0);
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .text-reveal.js-reveal-ready .tr-char {
+    opacity: 1;
+    filter: none;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ============================================================
    Primary Navigation
    ============================================================ */
 
