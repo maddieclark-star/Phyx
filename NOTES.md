@@ -1,6 +1,6 @@
 # PHYX Landing Page
 
-Single-page site, in page order: primary navigation (overlaid on the hero), hero banner, services, how-it-works, and image-left-right. All markup lives in `index.html`, all styles in `styles.css` (grouped by section, with section-prefixed custom properties and class names to avoid collisions), and shared images/icons in `site-assets/`. Run locally with `node server.js` (port `4173`).
+Single-page site, in page order: primary navigation (overlaid on the hero), hero banner, services, how-it-works, image-left-right, and article section. All markup lives in `index.html`, all styles in `styles.css` (grouped by section, with section-prefixed custom properties and class names to avoid collisions), and shared images/icons in `site-assets/`. Run locally with `node server.js` (port `4173`).
 
 The one deliberate exception to the per-section prefixing is the shared `.btn-label` button motion at the top of `styles.css` — see [Button Motion](#button-motion).
 
@@ -79,6 +79,26 @@ Two equal columns: a rounded photo on the left, and an eyebrow → headline → 
 
 Copy: eyebrow "Made properly, in Australia" → heading "The difference is in how it's made." → body → bullets "Australian owned and operated", "Sterile compounding pharmacy", "Doctor-led at every step".
 
+## Article Section
+
+Source: [Figma — PHYX Website Design](https://www.figma.com/design/7biT12cuYhYxDckJ5Rargr/PHYX-Website-Design?node-id=10283-17346), node `10283:17346` (named "FAQs" in Figma, but its content — "From the Academy" eyebrow, "Learn more" heading, 3-up article/photo cards — is an article/content-preview grid, not FAQs). Implemented as `.article` / `.article__…`, sitting directly under the Image Left Right section.
+
+"From the Academy" eyebrow + "Learn more" heading + "View all" button above a 3-up grid of article cards, each a photo with a category pill, hover-reveal arrow badge, and title/description pinned to the bottom behind a progressive blur + colour scrim. Verified against Figma at 1440: inset `1408×756` (16px outer margin), content wrap `1200×516` (104px grid margin), each card `392×384`, image wrap `-39/-168.53, 431(–432)×566` relative to its card.
+
+**Sizing notes:**
+- **Inset container**: `.article__inset` is unbounded (grows edge-to-edge with the viewport, like `.how__card`), background `#FBF8F1` (Figma's own `#EAEEEF` was swapped for this per design direction). `.article__container` caps at Figma's `max-width: 1920px` and centres inside it, so the header/grid stop growing past 1920 while the inset backdrop keeps filling the viewport — same pattern as `.split__container`.
+- **Card aspect ratio**: `392 / 384` (from the 1440 reference), so cards scale fluidly with the grid rather than clipping at fixed pixel dimensions.
+
+**Progressive blur (bottom scrim):** Figma draws this as a single uniform `backdrop-blur(39.5px)` box with a colour gradient (`rgba(18,46,48,0)` → `rgba(18,46,48,0.8)`) over the bottom `208px` of the `384px` card (54.17%). Implemented instead with the Services section's proven 5-layer masked-blur technique (`.article-card__blur-layer--1..5`, blur 2→28px, masked to progressively taller bands) *plus* a `.article-card__scrim` colour overlay reaching the requested 80% max opacity of `#122E30` — this reads as genuinely graduated blur rather than a single hard-edged blur box, while still hitting Figma's colour/height numbers.
+
+**Known deviations from the Figma source:**
+- **Photo layering**: each card's "Image" frame stacks 2–3 copies of a photo in Figma (an authoring artifact seen elsewhere in this file — see Image Left Right, How It Works); only the topmost, fully-covering layer was kept per card (`article-card-1.jpg`, `article-card-2.jpg`, `article-card-3.jpg`).
+- **Arrow badge hover**: the corner icon is Figma's `Icon/Arrow/Upward` component at `6px` containing a `~2.7px` arrow glyph — imperceptible at rest, same issue as the How It Works step marker. Rather than flattening it to a plain dot, it reuses the Services card's grow-into-arrow-badge hover treatment (same component, same `500ms cubic-bezier(0.22, 1, 0.36, 1)` timing), since these are clickable article cards with the same interaction need.
+- **Category pill copy / card title+body**: Figma only has placeholder copy ("category", "Title Text Goes Here...", lorem ipsum) — kept verbatim, swap in real copy if/when added to Figma.
+- Same `P22 Mackinac Pro` → `Fraunces` → `Georgia` font fallback as the other sections.
+
+Copy: eyebrow "From the Academy" → heading "Learn more" → button "View all" → 3 cards (placeholder category/title/body, see `index.html`).
+
 ## Button Motion
 
 Source: [Primary](https://www.figma.com/design/7biT12cuYhYxDckJ5Rargr/PHYX-Website-Design?node-id=10297-1185) (node `10297:1185`) and [Secondary](https://www.figma.com/design/7biT12cuYhYxDckJ5Rargr/PHYX-Website-Design?node-id=10297-1186) (node `10297:1186`).
@@ -102,7 +122,7 @@ The curve overshoots roughly 2px past the line, briefly exposing a sliver below 
 
 ## Eyebrow Scroll Reveal
 
-Each section's eyebrow (hero, services, how, split — not the per-card `step-card__eyebrow`, which already has its own hover treatment) fades and lifts 16px the first time it scrolls into view, via `scroll-effects.js`.
+Each section's eyebrow (hero, services, how, split, article — not the per-card `step-card__eyebrow`, which already has its own hover treatment) fades and lifts 16px the first time it scrolls into view, via `scroll-effects.js`.
 
 - Markup: the shared, unprefixed `eyebrow-reveal` class sits alongside each section's own `*__eyebrow` class.
 - `scroll-effects.js` adds `js-reveal-ready` (the actual hidden/transition state) at runtime, then uses one `IntersectionObserver` (40% visible threshold) to add `is-visible` and unobserve once triggered — a one-shot reveal, not a repeating scroll effect.
@@ -111,8 +131,8 @@ Each section's eyebrow (hero, services, how, split — not the per-card `step-ca
 
 ## Files
 
-- `index.html` — all five sections' markup, in page order
-- `styles.css` — shared button motion and eyebrow scroll reveal first, then all five sections' styles, grouped by section with prefixed tokens/classes (`nav-`/`.nav__…`, `hero-`/`.hero__…`, `how-`/`.how__…`, `services-`/`.services__…`, `split-`/`.split__…`) to avoid collisions
+- `index.html` — all six sections' markup, in page order
+- `styles.css` — shared button motion and eyebrow scroll reveal first, then all six sections' styles, grouped by section with prefixed tokens/classes (`nav-`/`.nav__…`, `hero-`/`.hero__…`, `how-`/`.how__…`, `services-`/`.services__…`, `split-`/`.split__…`, `article-`/`.article__…`) to avoid collisions
 - `scroll-effects.js` — IntersectionObserver-driven eyebrow reveal (see above)
 - `server.js` — static file server for local preview (port `4173`, override with `PORT` env var)
-- `site-assets/` — all photos, icons, and logo exported from Figma across the five sections
+- `site-assets/` — all photos, icons, and logo exported from Figma across the six sections
