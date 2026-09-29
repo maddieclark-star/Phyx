@@ -1,6 +1,6 @@
 # PHYX Landing Page
 
-Single-page site, in page order: primary navigation (overlaid on the hero), hero banner, services, how-it-works, image-left-right, and article section. All markup lives in `index.html`, all styles in `styles.css` (grouped by section, with section-prefixed custom properties and class names to avoid collisions), and shared images/icons in `site-assets/`. Run locally with `node server.js` (port `4173`).
+Single-page site, in page order: primary navigation (overlaid on the hero), hero banner, services, how-it-works, image-left-right, article section, and FAQ/accordion. All markup lives in `index.html`, all styles in `styles.css` (grouped by section, with section-prefixed custom properties and class names to avoid collisions), and shared images/icons in `site-assets/`. Interaction JS is split by concern: `scroll-effects.js` (eyebrow reveal) and `accordion.js` (FAQ toggle). Run locally with `node server.js` (port `4173`).
 
 The one deliberate exception to the per-section prefixing is the shared `.btn-label` button motion at the top of `styles.css` — see [Button Motion](#button-motion).
 
@@ -99,6 +99,34 @@ Source: [Figma — PHYX Website Design](https://www.figma.com/design/7biT12cuYhY
 
 Copy: eyebrow "From the Academy" → heading "Learn more" → button "View all" → 3 cards (placeholder category/title/body, see `index.html`).
 
+## FAQ / Accordion Section
+
+Source: [Figma — PHYX Website Design](https://www.figma.com/design/7biT12cuYhYxDckJ5Rargr/PHYX-Website-Design?node-id=10304-2318), node `10304:2318` ("Section 1", containing frames "Accordion default" `10304:1968` and "Accordion open" `10304:2130`). Implemented as `.faq` / `.faq__…` / `.faq-item__…`, sitting directly under the Article section.
+
+Dark glass-panel card: "Common questions" eyebrow + "Straight answers" heading above six accordion items sitting over an aurora-glow gradient background, with a "Ready when you are." CTA banner below. First item is open by default; each item toggles independently on click (plus icon crossfades to minus). Because the panel animates real height, the items below it genuinely cascade down/up as it opens and closes.
+
+**Accordion open/close motion** is driven by `accordion.js` measuring `scrollHeight` and transitioning between two explicit pixel heights, settling to `height: auto` on `transitionend` so the panel stays reflow-safe afterwards. Two CSS-only alternatives were tried first and rejected:
+- **CSS grid `0fr → 1fr`** — the initial implementation. Safari doesn't reliably interpolate the `fr` unit, so it snapped open instead of animating; this was the "jolting" behaviour.
+- **`max-height`** — animates a value the content never actually reaches, so the easing curve reads wrong and the close is front-loaded.
+
+Closing needs the height frozen to an explicit px value (plus a forced reflow) *before* collapsing to `0`, since a transition can't interpolate away from `auto`. Under `prefers-reduced-motion` the height snaps with no transition.
+
+**Aurora background:** Figma renders this as a WebGPU shader; `get_design_context` instead returned three pre-blurred SVG exports (`faq-glow-a/b/c.svg` — one shape reused/rotated twice for b/c) at fixed positions/rotations. Reproduced pixel-for-pixel: each blob's Figma-given left/top/width/height was converted to a percentage of the card's own 1408px reference width (its width at the 1440px design viewport), then placed inside a `.faq__aurora` wrapper (`width: 100%; aspect-ratio: 1/1`) so the art scales fluidly with the card's width — exactly like `.split__glow` — but stays anchored near the top regardless of how tall the accordion list grows as items open (a direct percentage-of-height wrapper would have made the glows balloon or shrink with content height, which Figma's own two states show does *not* happen — both frames position the three blobs identically despite the open frame being ~1.9× taller).
+
+**CTA banner (`.faq-banner`):** "Ready when you are." — full-bleed photo, directional gradient scrim for text legibility, and two pill CTAs reusing the shared `.btn-label` motion. Its eyebrow uses the shared `.eyebrow-reveal` fade/lift like every other section.
+
+Two layout details worth keeping in mind if this is edited:
+- **The 24px gutter.** The banner sits 24px inside the card on the left, right and bottom. The card's horizontal padding is wider than that, so the banner is pulled back out with a negative margin — which requires `align-self: stretch`, **not** `width: 100%`. On a centered flex item with a definite width the two negative margins just cancel out and nothing widens (this silently failed in the first pass). `--faq-banner-bleed` is re-declared per breakpoint as `card padding-x − 24px`, and the *bottom* gutter is the card's own `padding-bottom: 24px` — so don't override that in a media query.
+- **The photo uses `object-fit: cover`,** not Figma's explicit `width`/`height` percentages. Those scale the two axes independently, so the photo visibly warped as the banner's aspect ratio drifted from the 1368×494 reference (very noticeable on wide screens). `object-position: 85% 28%` keeps the subject framed as in Figma.
+
+**Known deviations from the Figma source:**
+- **Banner content alignment**: Figma positions the banner's "Hero" content block with a centering transform *and* renders it looking bottom-pinned in the static export. Implemented as vertically centered / left-aligned per design direction.
+- **Answer copy normalization**: Figma's own first accordion instance (open by default) styles its answer text with an explicit 70%-opacity layer; the other five (only visible once expanded) omit that opacity class but read identically in the rendered screenshots. Applied uniformly (`color: #e9e9e9; opacity: 0.7`) across all six for consistency.
+- **No `backdrop-filter` on the accordion list**: Figma puts `blur(50px)` on the list frame. Over the aurora art that reads as a flat, visibly darker rectangle sitting on top of the glow rather than frosted glass, so it was dropped — the items keep their translucency from their own `rgba(255,255,255,0.14)` fill.
+- Same `P22 Mackinac Pro` → `Fraunces` → `Georgia` heading font fallback as the other sections.
+
+Copy: eyebrow "Common questions" → heading "Straight answers" → 6 Q&As (placeholder Lorem ipsum answers, see `index.html`) — "Is the 15-minute consult really free", "Who will I be speaking with?", "Do I have to buy anything after the consult?", "What happens if the doctor says PHYX isn't right for me?", "Is PHYX available across Australia?", "How is PHYX different from what I can buy online?". Banner: eyebrow "Doctor-led health, personalised" → heading "Ready when you are." → "Book a free 15-minute consult with an Australian-registered nurse. No obligation." → CTAs "Start your free assessment" / "Talk to a phyx nurse".
+
 ## Button Motion
 
 Source: [Primary](https://www.figma.com/design/7biT12cuYhYxDckJ5Rargr/PHYX-Website-Design?node-id=10297-1185) (node `10297:1185`) and [Secondary](https://www.figma.com/design/7biT12cuYhYxDckJ5Rargr/PHYX-Website-Design?node-id=10297-1186) (node `10297:1186`).
@@ -122,7 +150,7 @@ The curve overshoots roughly 2px past the line, briefly exposing a sliver below 
 
 ## Eyebrow Scroll Reveal
 
-Each section's eyebrow (hero, services, how, split, article — not the per-card `step-card__eyebrow`, which already has its own hover treatment) fades and lifts 16px the first time it scrolls into view, via `scroll-effects.js`.
+Each section's eyebrow (hero, services, how, split, article, faq, and the FAQ CTA banner — not the per-card `step-card__eyebrow`, which already has its own hover treatment) fades and lifts 16px the first time it scrolls into view, via `scroll-effects.js`.
 
 - Markup: the shared, unprefixed `eyebrow-reveal` class sits alongside each section's own `*__eyebrow` class.
 - `scroll-effects.js` adds `js-reveal-ready` (the actual hidden/transition state) at runtime, then uses one `IntersectionObserver` (40% visible threshold) to add `is-visible` and unobserve once triggered — a one-shot reveal, not a repeating scroll effect.
