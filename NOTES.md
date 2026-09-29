@@ -1,6 +1,6 @@
 # PHYX Landing Page
 
-Single-page site, in page order: primary navigation (overlaid on the hero), hero banner, services, how-it-works, image-left-right, article section, FAQ/accordion, and footer. All markup lives in `index.html`, all styles in `styles.css` (grouped by section, with section-prefixed custom properties and class names to avoid collisions), and shared images/icons in `site-assets/`. Interaction JS is split by concern: `scroll-effects.js` (eyebrow reveal) and `accordion.js` (FAQ toggle). Run locally with `node server.js` (port `4173`).
+Single-page site, in page order: primary navigation (overlaid on the hero), hero banner, services, how-it-works, image-left-right, article section, FAQ/accordion, and footer. All markup lives in `index.html`, all styles in `styles.css` (grouped by section, with section-prefixed custom properties and class names to avoid collisions), and shared images/icons in `site-assets/`. Interaction JS is split by concern: `scroll-effects.js` (eyebrow reveal), `hero-motion.js` (hero media reveal sequence + magnetic badges) and `accordion.js` (FAQ toggle). Run locally with `node server.js` (port `4173`).
 
 The one deliberate exception to the per-section prefixing is the shared `.btn-label` button motion at the top of `styles.css` — see [Button Motion](#button-motion).
 
@@ -24,12 +24,62 @@ Source: [Figma — PHYX Website Design](https://www.figma.com/design/7biT12cuYhY
 Full-bleed hero section: dark-teal headline block fading into a pale rounded photo card, with four floating "USP" badges connected by an arc line.
 
 **Known deviations from the Figma source:**
-- **Background aurora blobs**: Figma drives the glow behind the headline with a WebGPU shader effect, impractical for a static page. Replaced with two blurred `radial-gradient` pseudo-elements (`.hero__glow--a`, `.hero__glow--b`).
+- **Background glow**: Figma drives this with a WebGPU shader effect, impractical for a static page. Approximated as two stacked `radial-gradient` layers — see [Top Highlight](#top-highlight).
 - **Display heading font**: Figma specifies `P22 Mackinac Pro` (licensed, unavailable via Google Fonts). Falls back to `Fraunces` then `Georgia`. Add `P22 Mackinac Pro` as `@font-face` later and it'll take over automatically (`--hero-font-heading` lists it first).
 
-Structure: `.hero__header` (glows + `.hero__row` with heading/subtext + CTAs) above `.hero__media` (cropped photo, sky overlays, arc line, four positioned `.hero__badge` pills — doctors, care plan, clinical review, pharmacy).
+Structure: `.hero__header` (`.hero__highlight` + `.hero__row` with heading/subtext + CTAs) above `.hero__media` (cropped photo, sky overlays, arc line, four positioned `.hero__badge` pills — doctors, care plan, clinical review, pharmacy).
+
+The "Personalised care plan" badge sits on a solid white pill (`--hero-surface-primary`) — the other three are `rgba(255,255,255,0.96)` — and its icon circle carries the aqua accent, `--hero-surface-accent-mid` (`#79dde2`), via `.hero__badge-icon--accent`. The `#122e30` check glyph on that aqua reads at 9.1:1, and the label on white at 10.6:1.
+
+`--hero-surface-tertiary` (`#e9f9fa`, the icon circle's previous pale fill) is left in the palette but is no longer referenced.
 
 Copy: eyebrow "Doctor-led health, personalised" → heading "The strongest version of you." → subtext "Diagnostic testing, personalised care pathways and ongoing clinical support, tailored to you." → CTAs "Start your free assessment" / "Talk to a phyx nurse".
+
+### Top Highlight
+
+A soft teal light spill across the top of the hero, peaking right of centre. `.hero__highlight` — one absolutely-positioned element, 512px tall, full header width, carrying two `radial-gradient` background layers:
+
+| Layer | Ellipse | Centre | Colour | Alpha |
+| --- | --- | --- | --- | --- |
+| Core (on top) | 43.5% × 131px | 63% 0% | `#4ec5a8` | 0.37 |
+| Broad | 53.9% × 511px | 63% 0% | `#1bc2f5` | 0.48 |
+
+Derived rather than eyeballed: the reference frame was rendered to PNG, its dark header area sampled (~1.8k points, masked to exclude text/buttons/photo), and both ellipses, alphas and colours least-squares fitted against it. One ellipse couldn't fit — the residuals showed the real glow is a tight bright core over a broad dim wash, and a single overlay colour couldn't satisfy both (the field wants a bluer overlay than the core does), hence two layers with independent colours. Mean dE ~10, worst ~22, against the mock.
+
+Layer order matters: the first-listed background layer paints on top, which is the order the fit composited them in. Horizontal radii are `%` so the spill scales with the viewport; vertical radii are fixed px.
+
+**This replaced the previous `.hero__glow--a/--b` blobs**, which sat at the top *left*. The reference frame shows the hero's left edge at base `#122e30` with the light centred at 63% — so the old blobs contradicted the mock rather than under-shooting it, and stacking a third layer over them would not have matched. Restore them from git history if the placement is ever wanted back.
+
+Contrast was re-checked after brightening: worst white-on-background is the "About" nav link at 5.67:1 (the links sit left of the peak). The brightest point in the band is 3.76:1 against white but carries no text — the nav utilities there are pills with their own fills.
+
+### Media Reveal Sequence
+
+Motion reference: [Figma — reference frames 1–5](https://www.figma.com/design/7biT12cuYhYxDckJ5Rargr/PHYX-Website-Design?node-id=10304-2550), node `10304:2550`. Each frame adds one more USP badge; the frame order defines the reveal order.
+
+Scroll-triggered from `hero-motion.js` — an IntersectionObserver (threshold `0.25`) adds `.is-revealed` to `.hero__media`, and CSS does the rest. Total run ~4.06s:
+
+| At | What |
+| --- | --- |
+| 0ms | Arc stroke draws clockwise from 12 o'clock (1250ms) |
+| 1400ms | USP 1 — Personalised care plan |
+| 2080ms | USP 2 — Free 15-min clinical review |
+| 2760ms | USP 3 — AHPRA-registered doctors |
+| 3440ms | USP 4 — Australian compounding pharmacy (620ms, ends 4060ms) |
+
+Timings live in `--hero-seq-*` custom properties on `.hero__media`; each badge carries `data-hero-usp="1..4"`, which `hero-motion.js` copies into `--hero-usp-index` to compute its stagger delay.
+
+**Implementation notes:**
+- **Arc is now inline SVG**, not `<img src="arc-line.svg">` — a stroke can only be drawn with `stroke-dasharray`/`stroke-dashoffset` if the path is in the document. The circle is redrawn as a `<path>` starting at 12 o'clock sweeping clockwise, with `pathLength="1"` so the dash maths is a plain 1 → 0. Rotating the original `<circle>` to move its start point was rejected: the gradient is `userSpaceOnUse`, so rotating the element rotates the fade with it and changes the design. Geometry is pixel-identical to the old `<img>`.
+- **Badge entry** is `opacity` + `translateY`/`scale` + `blur`, easing on `cubic-bezier(0.34, 1.45, 0.5, 1)` for ~0.8% scale overshoot — the "popped into place" settle of an iOS notification rather than a linear slide. `animation-fill-mode: both` is required: `backwards` alone holds the hidden state through the stagger delay but drops the settled state, so badges vanish again once each animation ends.
+- **Magnetic hover** uses the `translate` property while the entry animation uses `transform`. They compose independently, so the two never fight over a single `transform` value and no wrapper element is needed.
+
+### Magnetic Badges
+
+`hero-motion.js` writes the cursor offset into `--hero-usp-pull-x/y` on each badge (rAF-throttled `pointermove`); CSS transitions `translate` toward it — 140ms while pulling, 320ms on release.
+
+The field extends `90px` beyond each badge's edge and the offset is capped at `12px`. The pull is scaled against the badge's own half-extent *plus* the field radius, not as a flat fraction of the cursor offset: these pills are ~200px wide, so a flat fraction pins to the cap the instant the cursor arrives. Measured sweep across a badge is a smooth −9.3 → 0 → +9.1px.
+
+Skipped entirely when `(hover: hover) and (pointer: fine)` doesn't match — on touch there's no hover to anticipate and the pull would only fire on tap. Under `prefers-reduced-motion: reduce` the script returns before adding `.js-seq-ready`, so the stroke and all four badges render in their final state with no animation.
 
 ## How It Works
 
@@ -186,6 +236,7 @@ Each section's eyebrow (hero, services, how, split, article, faq, and the FAQ CT
 - `index.html` — all sections' markup, in page order
 - `styles.css` — shared button motion and eyebrow scroll reveal first, then every section's styles, grouped by section with prefixed tokens/classes (`nav-`/`.nav__…`, `hero-`/`.hero__…`, `how-`/`.how__…`, `services-`/`.services__…`, `split-`/`.split__…`, `article-`/`.article__…`, `faq-`/`.faq__…`, `footer-`/`.footer__…`) to avoid collisions
 - `scroll-effects.js` — IntersectionObserver-driven eyebrow reveal (see above)
+- `hero-motion.js` — hero media reveal sequence and magnetic USP badges (see above)
 - `accordion.js` — FAQ open/close height animation (see above)
 - `server.js` — static file server for local preview (port `4173`, override with `PORT` env var)
 - `site-assets/` — all photos, icons, and logos exported from Figma across every section

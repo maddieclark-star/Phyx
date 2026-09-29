@@ -39,8 +39,7 @@
     </nav>
 
     <div class="hero__header">
-      <div class="hero__glow hero__glow--a" aria-hidden="true"></div>
-      <div class="hero__glow hero__glow--b" aria-hidden="true"></div>
+      <div class="hero__highlight" aria-hidden="true"></div>
 
       <div class="hero__row">
         <div class="hero__content">
@@ -79,13 +78,30 @@
         <img src="site-assets/overlay-wide.png" alt="" />
       </div>
 
-      <img class="hero__arc" src="site-assets/arc-line.svg" alt="" />
+      <!-- Inlined from site-assets/arc-line.svg so the stroke can be drawn on
+           scroll. The circle is redrawn as a path starting at 12 o'clock and
+           sweeping clockwise; pathLength="1" normalises the dash maths. -->
+      <svg class="hero__arc" preserveAspectRatio="none" width="706" height="706" viewBox="0 0 706 706" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path
+          class="hero__arc-stroke"
+          pathLength="1"
+          d="M353 0.817A352.183 352.183 0 0 1 353 705.183A352.183 352.183 0 0 1 353 0.817"
+          stroke="url(#hero-arc-gradient)"
+          stroke-width="1.63426"
+        />
+        <defs>
+          <linearGradient id="hero-arc-gradient" x1="353" y1="0" x2="360.5" y2="385.5" gradientUnits="userSpaceOnUse">
+            <stop stop-color="white" />
+            <stop offset="1" stop-color="white" stop-opacity="0" />
+          </linearGradient>
+        </defs>
+      </svg>
 
       <div class="hero__sky hero__sky--strip" aria-hidden="true">
         <img src="site-assets/overlay-strip.png" alt="" />
       </div>
 
-      <div class="hero__badge hero__badge--doctors">
+      <div class="hero__badge hero__badge--doctors" data-hero-usp="3">
         <div class="hero__avatars">
           <img src="site-assets/avatar-1.png" alt="" />
           <img src="site-assets/avatar-2.png" alt="" />
@@ -94,14 +110,14 @@
         <span>AHPRA-registered doctors</span>
       </div>
 
-      <div class="hero__badge hero__badge--care">
-        <span class="hero__badge-icon hero__badge-icon--tertiary">
+      <div class="hero__badge hero__badge--care" data-hero-usp="1">
+        <span class="hero__badge-icon hero__badge-icon--accent">
           <img src="site-assets/icon-check.svg" alt="" />
         </span>
         <span>Personalised care plan</span>
       </div>
 
-      <div class="hero__badge hero__badge--review">
+      <div class="hero__badge hero__badge--review" data-hero-usp="2">
         <svg class="hero__badge-status" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <circle class="hero__badge-status-ring" cx="10" cy="10" r="10" fill="#04B825" fill-opacity="0.2" />
           <circle cx="10" cy="10" r="4" fill="#04B825" />
@@ -109,7 +125,7 @@
         <span>Free 15-min clinical review</span>
       </div>
 
-      <div class="hero__badge hero__badge--pharmacy">
+      <div class="hero__badge hero__badge--pharmacy" data-hero-usp="4">
         <span class="hero__badge-icon hero__badge-icon--dark">
           <img src="site-assets/icon-compound.svg" alt="" />
         </span>
@@ -734,6 +750,7 @@
   </footer>
 
   <script src="scroll-effects.js" defer></script>
+  <script src="hero-motion.js" defer></script>
   <script src="accordion.js" defer></script>
 </body>
 </html>

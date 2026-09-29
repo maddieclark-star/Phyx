@@ -251,6 +251,7 @@ button:focus-visible .btn-label__track {
   /* Color */
   --hero-surface-accent-dark: #122e30;
   --hero-surface-accent-light: #a5e9ec;
+  --hero-surface-accent-mid: #79dde2;
   --hero-surface-primary: #ffffff;
   --hero-surface-tertiary: #e9f9fa;
   --hero-surface-invert-secondary: #111111;
@@ -325,28 +326,25 @@ button:focus-visible .btn-label__track {
   overflow: hidden;
 }
 
-.hero__glow {
+/* Light spill across the top of the hero. Two stacked radial gradients — a
+   tight warm-teal core over a broad cyan wash — fitted to the Figma reference
+   (node 10283:17232) by sampling its dark header area and least-squares fitting
+   both ellipses, their alphas and their colours. Mean dE ~10 against the mock.
+
+   Listed core-first because the first background layer paints on top, which
+   matches the order the fit composited them in. Horizontal radii are % so the
+   spill scales with the viewport; vertical radii are fixed px. */
+
+.hero__highlight {
   position: absolute;
-  border-radius: 50%;
-  filter: blur(120px);
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 512px;
   pointer-events: none;
-  mix-blend-mode: screen;
-}
-
-.hero__glow--a {
-  width: 900px;
-  height: 900px;
-  top: -520px;
-  left: -80px;
-  background: radial-gradient(closest-side, rgba(121, 221, 226, 0.35), rgba(121, 221, 226, 0));
-}
-
-.hero__glow--b {
-  width: 700px;
-  height: 700px;
-  top: -360px;
-  left: 260px;
-  background: radial-gradient(closest-side, rgba(165, 233, 236, 0.28), rgba(165, 233, 236, 0));
+  background:
+    radial-gradient(43.5% 131px at 63% 0%, rgba(78, 197, 168, 0.37), rgba(78, 197, 168, 0)),
+    radial-gradient(53.9% 511px at 63% 0%, rgba(27, 194, 245, 0.48), rgba(27, 194, 245, 0));
 }
 
 .hero__row {
@@ -532,6 +530,109 @@ button:focus-visible .btn-label__track {
   top: 12.684%;
   width: 50.142%;
   height: 129.779%;
+  overflow: visible;
+}
+
+/* ---------- Media reveal sequence ----------
+
+   Scroll-triggered, driven by hero-motion.js adding .is-revealed to
+   .hero__media. Runs stroke -> four USP notifications in ~4.1s total:
+
+     0ms      arc stroke draws clockwise from 12 o'clock  (1250ms)
+     1400ms   USP 1  Personalised care plan
+     2080ms   USP 2  Free 15-min clinical review
+     2760ms   USP 3  AHPRA-registered doctors
+     3440ms   USP 4  Australian compounding pharmacy      (620ms, ends 4060ms)
+
+   Sequence order matches the Figma reference frames (node 10304:2550). */
+
+.hero__media {
+  --hero-seq-stroke-duration: 1250ms;
+  --hero-seq-usp-start: 1400ms;
+  --hero-seq-usp-stagger: 680ms;
+  --hero-seq-usp-duration: 620ms;
+  /* Slight overshoot on settle — the "popped into place" feel of an iOS
+     notification rather than a linear slide. */
+  --hero-seq-usp-ease: cubic-bezier(0.34, 1.45, 0.5, 1);
+}
+
+.hero__media.js-seq-ready .hero__arc-stroke {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+
+.hero__media.js-seq-ready.is-revealed .hero__arc-stroke {
+  animation: hero-arc-draw var(--hero-seq-stroke-duration) cubic-bezier(0.33, 0, 0.2, 1)
+    forwards;
+}
+
+@keyframes hero-arc-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.hero__media.js-seq-ready .hero__badge {
+  opacity: 0;
+  /* `translate` is reserved for the magnetic hover offset so it composes with
+     the entry `transform` instead of fighting it. */
+  transform: translateY(14px) scale(0.86);
+  transform-origin: 20% 50%;
+  filter: blur(5px);
+}
+
+.hero__media.js-seq-ready.is-revealed .hero__badge {
+  /* `both`: hold the hidden from-state through the stagger delay, and hold the
+     settled to-state once the badge has landed. */
+  animation: hero-usp-in var(--hero-seq-usp-duration) var(--hero-seq-usp-ease) both;
+  animation-delay: calc(
+    var(--hero-seq-usp-start) + (var(--hero-usp-index, 1) - 1) * var(--hero-seq-usp-stagger)
+  );
+}
+
+@keyframes hero-usp-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.86);
+    filter: blur(5px);
+  }
+  60% {
+    opacity: 1;
+    filter: blur(0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+
+/* Magnetic pull — hero-motion.js writes the cursor offset into these vars.
+   The transition smooths both the follow and the release back to centre. */
+.hero__badge {
+  translate: var(--hero-usp-pull-x, 0px) var(--hero-usp-pull-y, 0px);
+  transition: translate 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hero__badge.is-pulling {
+  transition-duration: 140ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__media.js-seq-ready .hero__arc-stroke,
+  .hero__media.js-seq-ready .hero__badge {
+    animation: none;
+    opacity: 1;
+    transform: none;
+    filter: none;
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+  }
+
+  .hero__badge {
+    translate: none;
+    transition: none;
+  }
 }
 
 /* ---------- Badges ---------- */
@@ -573,11 +674,11 @@ button:focus-visible .btn-label__track {
   height: 24px;
 }
 
-.hero__badge-icon--tertiary {
-  background: var(--hero-surface-tertiary);
+.hero__badge-icon--accent {
+  background: var(--hero-surface-accent-mid);
 }
 
-.hero__badge-icon--tertiary img {
+.hero__badge-icon--accent img {
   width: 20px;
   height: 20px;
 }
