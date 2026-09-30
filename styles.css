@@ -599,7 +599,7 @@ button:focus-visible .btn-label__track {
   --hero-padding-x: 80px;
   --hero-header-pt: 180px;
   --hero-header-pb: 80px;
-  --hero-media-margin: 16px;
+  --hero-media-margin: 24px;
   --hero-media-radius: 24px;
 
   /* Spacing */
