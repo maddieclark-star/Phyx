@@ -6,7 +6,12 @@
   <title>PHYX</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;500&family=DM+Sans:ital,wght@0,300;0,500;1,300&family=Fraunces:opsz,wght@9..144,500&display=swap" rel="stylesheet" />
+  <!-- P22 Mackinac Pro (heading) — served via the licensed Adobe Fonts kit.
+       Note: the kit's allowed domains (fonts.adobe.com) must include whichever
+       domain this site is deployed to, or it'll silently fall back to Fraunces. -->
+  <link rel="stylesheet" href="https://use.typekit.net/tei2azp.css" />
+  <!-- Fraunces is the fallback if the Typekit font fails to load. -->
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -30,10 +35,10 @@
 
         <div class="nav__utilities">
           <div class="nav__ctas">
-            <button class="nav__button nav__button--primary" type="button">
+            <button class="nav__button nav__button--secondary" type="button">
               <span class="btn-label"><span class="btn-label__track"><span>Patient login</span><span aria-hidden="true">Patient login</span></span></span>
             </button>
-            <button class="nav__button nav__button--secondary" type="button">
+            <button class="nav__button nav__button--primary" type="button">
               <span class="btn-label"><span class="btn-label__track"><span>Start assessment</span><span aria-hidden="true">Start assessment</span></span></span>
             </button>
           </div>

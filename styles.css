@@ -7,6 +7,94 @@ body {
 }
 
 /* ============================================================
+   Shared — Embedded brand fonts
+
+   Self-hosted so brand typefaces render consistently on machines that
+   don't have them installed and/or don't have internet access to
+   Google Fonts. DM Sans and DM Mono are open-licensed (SIL OFL) and
+   embedded directly below.
+
+   P22 Mackinac Pro (heading) is served via the licensed Adobe Fonts
+   (Typekit) kit linked in index.html — Adobe registers it under the
+   family name 'p22-mackinac-pro', which is what the heading font
+   stacks below reference. Fraunces is the fallback if that kit fails
+   to load (e.g. the deploying domain isn't authorised in the kit's
+   Adobe Fonts settings).
+   ============================================================ */
+
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('site-assets/fonts/dm-sans-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('site-assets/fonts/dm-sans-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('site-assets/fonts/dm-sans-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('site-assets/fonts/dm-sans-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: 'DM Mono';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('site-assets/fonts/dm-mono-300-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'DM Mono';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('site-assets/fonts/dm-mono-300-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: 'DM Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('site-assets/fonts/dm-mono-500-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'DM Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('site-assets/fonts/dm-mono-500-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* ============================================================
    Shared — Button label motion
 
    Deliberately unprefixed: unlike the section styles below, this is one
@@ -21,6 +109,7 @@ body {
 
 :root {
   --btn-hover-accent: #79dde2;
+  --btn-secondary-border: #d2f4f5;
   --btn-motion-duration: 460ms;
   --btn-motion-ease: cubic-bezier(0.34, 1.56, 0.64, 1);
   --btn-colour-duration: 320ms;
@@ -196,7 +285,6 @@ button:focus-visible .btn-label__track {
 
 :root {
   /* Color */
-  --nav-surface-primary: #ffffff;
   --nav-surface-accent-light: #a5e9ec;
   --nav-surface-accent-dark: #122e30;
   --nav-cta-text-secondary: #122e30;
@@ -218,7 +306,7 @@ button:focus-visible .btn-label__track {
   --nav-sticky-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --nav-slide-duration: 520ms;
   --nav-slide-ease: cubic-bezier(0.16, 1, 0.3, 1);
-  --nav-sticky-button-border: rgba(31, 199, 207, 0.8);
+  --nav-sticky-button-border: rgba(31, 199, 207, 0.8); /* #1FC7CF @ 80% */
 
   --nav-text-button-sm: 14px;
   --nav-line-height-button-sm: 24px;
@@ -431,13 +519,35 @@ button:focus-visible .btn-label__track {
 }
 
 .nav__button--secondary {
-  background: var(--nav-surface-primary);
-  color: var(--nav-cta-text-secondary);
+  background: transparent;
+  border-color: var(--btn-secondary-border);
+  color: var(--nav-text-primary-invert);
+  transition: background-color var(--btn-colour-duration) var(--btn-colour-ease),
+    border-color var(--nav-sticky-duration) var(--nav-sticky-ease),
+    color var(--btn-colour-duration) var(--btn-colour-ease);
 }
 
 .nav__button:hover,
 .nav__button:focus-visible {
   background: var(--btn-hover-accent);
+}
+
+/* The secondary button's idle text colour flips with nav state (white over
+   the hero, dark once the sticky nav is white — see the .nav.nav--sticky
+   rule below); on hover it always goes dark to stay legible against the
+   light cyan hover fill, and the stroke drops out since the fill itself
+   now carries the button. */
+.nav__button--secondary:hover,
+.nav__button--secondary:focus-visible {
+  border-color: transparent;
+  color: var(--nav-cta-text-secondary);
+}
+
+/* Higher specificity than .nav.nav--sticky .nav__button--secondary so the
+   stroke still drops out on hover once the nav has gone sticky. */
+.nav.nav--sticky .nav__button--secondary:hover,
+.nav.nav--sticky .nav__button--secondary:focus-visible {
+  border-color: transparent;
 }
 
 /* ============================================================
@@ -463,7 +573,7 @@ button:focus-visible .btn-label__track {
   --hero-gradient-end: #fbf8f1;
 
   /* Typography */
-  --hero-font-heading: 'P22 Mackinac Pro', 'Fraunces', Georgia, serif;
+  --hero-font-heading: 'p22-mackinac-pro', 'Fraunces', Georgia, serif;
   --hero-font-body: 'DM Sans', sans-serif;
   --hero-font-mono: 'DM Mono', monospace;
 
@@ -670,12 +780,25 @@ button:focus-visible .btn-label__track {
 }
 
 .hero__button--secondary {
-  background: var(--hero-surface-primary);
+  background: transparent;
+  border: 1px solid var(--btn-secondary-border);
+  color: var(--hero-text-primary-invert);
+  transition: background-color var(--btn-colour-duration) var(--btn-colour-ease),
+    border-color var(--btn-colour-duration) var(--btn-colour-ease),
+    color var(--btn-colour-duration) var(--btn-colour-ease);
 }
 
 .hero__button:hover,
 .hero__button:focus-visible {
   background: var(--btn-hover-accent);
+}
+
+/* Flip to dark text on hover so it stays legible against the light cyan
+   hover fill (the resting white pairs with the transparent/no-fill state). */
+.hero__button--secondary:hover,
+.hero__button--secondary:focus-visible {
+  border-color: transparent;
+  color: var(--hero-surface-accent-dark);
 }
 
 /* ---------- Media ---------- */
@@ -971,14 +1094,14 @@ button:focus-visible .btn-label__track {
 }
 
 .hero__badge--doctors {
-  left: 19.74%;
+  left: 21.24%;
   top: 28.309%;
   backdrop-filter: blur(55px);
   box-shadow: 0px 4px 19.6px 0px rgba(18, 46, 48, 0.24);
 }
 
 .hero__badge--care {
-  left: 17.61%;
+  left: 19.11%;
   top: 59.007%;
   background: var(--hero-surface-primary);
 }
@@ -1013,7 +1136,7 @@ button:focus-visible .btn-label__track {
   --how-step-dot: #122e30;
 
   /* Typography */
-  --how-font-heading: 'P22 Mackinac Pro', 'Fraunces', Georgia, serif;
+  --how-font-heading: 'p22-mackinac-pro', 'Fraunces', Georgia, serif;
   --how-font-body: 'DM Sans', sans-serif;
   --how-font-mono: 'DM Mono', monospace;
 
@@ -1336,7 +1459,7 @@ button:focus-visible .btn-label__track {
   --services-vignette: #122e30;
 
   /* Typography */
-  --services-font-heading: 'P22 Mackinac Pro', 'Fraunces', Georgia, serif;
+  --services-font-heading: 'p22-mackinac-pro', 'Fraunces', Georgia, serif;
   --services-font-body: 'DM Sans', sans-serif;
   --services-font-mono: 'DM Mono', monospace;
 
@@ -1732,7 +1855,7 @@ button:focus-visible .btn-label__track {
   --split-text-accent: #122e30;
 
   /* Typography */
-  --split-font-heading: 'P22 Mackinac Pro', 'Fraunces', Georgia, serif;
+  --split-font-heading: 'p22-mackinac-pro', 'Fraunces', Georgia, serif;
   --split-font-body: 'DM Sans', sans-serif;
   --split-font-mono: 'DM Mono', monospace;
 
@@ -2024,7 +2147,7 @@ button:focus-visible .btn-label__track {
   --article-blur-tint: 18, 46, 48;
 
   /* Typography */
-  --article-font-heading: 'P22 Mackinac Pro', 'Fraunces', Georgia, serif;
+  --article-font-heading: 'p22-mackinac-pro', 'Fraunces', Georgia, serif;
   --article-font-body: 'DM Sans', sans-serif;
   --article-font-mono: 'DM Mono', monospace;
 
@@ -2487,7 +2610,7 @@ button:focus-visible .btn-label__track {
   --faq-gradient-4: rgb(4, 130, 137);
 
   /* Typography */
-  --faq-font-heading: 'P22 Mackinac Pro', 'Fraunces', Georgia, serif;
+  --faq-font-heading: 'p22-mackinac-pro', 'Fraunces', Georgia, serif;
   --faq-font-body: 'DM Sans', sans-serif;
   --faq-font-mono: 'DM Mono', monospace;
 
@@ -3019,12 +3142,25 @@ button:focus-visible .btn-label__track {
 }
 
 .faq-banner__button--secondary {
-  background: var(--faq-surface-primary);
+  background: transparent;
+  border: 1px solid var(--btn-secondary-border);
+  color: var(--faq-text-primary-invert);
+  transition: background-color var(--btn-colour-duration) var(--btn-colour-ease),
+    border-color var(--btn-colour-duration) var(--btn-colour-ease),
+    color var(--btn-colour-duration) var(--btn-colour-ease);
 }
 
 .faq-banner__button:hover,
 .faq-banner__button:focus-visible {
   background: var(--btn-hover-accent);
+}
+
+/* Flip to dark text on hover so it stays legible against the light cyan
+   hover fill (the resting white pairs with the transparent/no-fill state). */
+.faq-banner__button--secondary:hover,
+.faq-banner__button--secondary:focus-visible {
+  border-color: transparent;
+  color: var(--faq-text-button-dark);
 }
 
 /* ---------- Responsive (desktop breakpoints) ---------- */
