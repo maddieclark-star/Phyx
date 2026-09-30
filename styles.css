@@ -678,7 +678,7 @@ button:focus-visible .btn-label__track {
   pointer-events: none;
   background:
     radial-gradient(43.5% 131px at 63% 0%, rgba(78, 197, 168, 0.5), rgba(78, 197, 168, 0)),
-    radial-gradient(58% 560px at 63% 0%, rgba(27, 194, 245, 0.68), rgba(27, 194, 245, 0));
+    radial-gradient(58% 500px at 63% 0%, rgba(27, 194, 245, 0.68), rgba(27, 194, 245, 0));
 }
 
 .hero__row {
