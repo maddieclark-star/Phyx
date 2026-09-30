@@ -1351,10 +1351,9 @@ button:focus-visible .btn-label__track {
   object-position: center;
 }
 
-/* Cards 1 and 3's source photos run darker/moodier than card 2 — lightened
+/* Card 1's source photo runs darker/moodier than the others — lightened
    to even out the row's exposure. */
-.step-card:nth-child(1) .step-card__image,
-.step-card:nth-child(3) .step-card__image {
+.step-card:nth-child(1) .step-card__image {
   filter: brightness(1.35);
 }
 
@@ -2170,7 +2169,7 @@ button:focus-visible .btn-label__track {
 
   /* Layout */
   --article-max-width: 1920px;
-  --article-outer-padding: 16px;
+  --article-outer-padding: 24px;
   --article-inset-padding-x: 104px;
   --article-inset-padding-y: 120px;
   --article-inset-radius: 24px;
@@ -2680,7 +2679,7 @@ button:focus-visible .btn-label__track {
 
 .faq {
   width: 100%;
-  padding: 16px;
+  padding: 0 24px 24px;
   background: var(--faq-surface-primary);
 }
 
